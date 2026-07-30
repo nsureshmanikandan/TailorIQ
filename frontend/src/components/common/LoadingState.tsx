@@ -6,35 +6,30 @@ const PHASE_STEPS = [
     key: 'phase_1',
     label: 'Parsing Resume & JD',
     agents: ['ResumeParser', 'JDParser'],
-    hint: '~15 sec',
     targetPct: 10,
   },
   {
     key: 'phase_2',
     label: 'Scoring & Gap Analysis',
     agents: ['MatchScoring', 'GapAnalysis', 'ATSCheck'],
-    hint: '~30 sec',
     targetPct: 30,
   },
   {
     key: 'phase_3',
     label: 'Tailoring Your Resume',
     agents: ['ResumeTailoring', 'ClaimVerification'],
-    hint: '~60–90 sec',
     targetPct: 55,
   },
   {
     key: 'phase_4',
     label: 'Generating Cover Letter & Interview Guide',
     agents: ['CoverLetter', 'InterviewPrep'],
-    hint: '~30 sec',
     targetPct: 75,
   },
   {
     key: 'phase_5',
     label: 'Packaging Documents',
     agents: ['PackageGeneration'],
-    hint: '~5 sec',
     targetPct: 90,
   },
 ]
@@ -49,37 +44,83 @@ const PHASE_INDEX: Record<string, number> = {
   partial: 5,
 }
 
+function fmtMs(ms: number): string {
+  const s = Math.floor(ms / 1000)
+  if (s < 60) return `${s}s`
+  return `${Math.floor(s / 60)}m ${s % 60}s`
+}
+
 export default function LoadingState() {
   const { pipelinePhase, error, phase } = useAnalysisStore()
   const [displayPct, setDisplayPct] = useState(0)
   const animRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const targetRef = useRef(0)
 
-  // Compute the target % based on the current pipeline phase
+  // ── Timing ──────────────────────────────────────────────────────────
+  const overallStart = useRef(Date.now())
+  const phaseTimesRef = useRef<Record<string, { start: number; end?: number }>>({})
+  const prevPhaseIdx = useRef(-1)
+  const [phaseTimes, setPhaseTimes] = useState<Record<string, { start: number; end?: number }>>({})
+  const [tick, setTick] = useState(0)
+
+  // Tick every second for live timers
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 1000)
+    return () => clearInterval(id)
+  }, [])
+
   const phaseIdx = PHASE_INDEX[pipelinePhase ?? 'phase_1'] ?? 0
   const currentStep = PHASE_STEPS[Math.min(phaseIdx, PHASE_STEPS.length - 1)]
-  const targetPct = pipelinePhase === 'completed' || pipelinePhase === 'partial'
-    ? 100
-    : currentStep?.targetPct ?? 5
+  const isDone = pipelinePhase === 'completed' || pipelinePhase === 'partial'
+  const targetPct = isDone ? 100 : currentStep?.targetPct ?? 5
 
-  // Smoothly animate displayPct toward targetPct
+  // Record start/end time when phase transitions
+  useEffect(() => {
+    const now = Date.now()
+    const prev = prevPhaseIdx.current
+
+    if (prev >= 0 && prev < PHASE_STEPS.length) {
+      const prevKey = PHASE_STEPS[prev].key
+      if (phaseTimesRef.current[prevKey] && !phaseTimesRef.current[prevKey].end) {
+        phaseTimesRef.current[prevKey].end = now
+      }
+    }
+
+    if (phaseIdx >= 0 && phaseIdx < PHASE_STEPS.length) {
+      const currKey = PHASE_STEPS[phaseIdx].key
+      if (!phaseTimesRef.current[currKey]) {
+        phaseTimesRef.current[currKey] = { start: now }
+      }
+    }
+
+    prevPhaseIdx.current = phaseIdx
+    setPhaseTimes({ ...phaseTimesRef.current })
+  }, [phaseIdx])
+
+  // Smooth progress bar animation
   useEffect(() => {
     targetRef.current = targetPct
     if (animRef.current) clearInterval(animRef.current)
-
     animRef.current = setInterval(() => {
       setDisplayPct((prev) => {
         const diff = targetRef.current - prev
         if (Math.abs(diff) < 0.5) return targetRef.current
-        // Fast jump if we're behind, slow creep if we're close
         return prev + Math.max(0.3, diff * 0.06)
       })
     }, 200)
-
-    return () => {
-      if (animRef.current) clearInterval(animRef.current)
-    }
+    return () => { if (animRef.current) clearInterval(animRef.current) }
   }, [targetPct])
+
+  const overallElapsed = fmtMs(Date.now() - overallStart.current)
+  // suppress tick unused warning
+  void tick
+
+  function phaseTimer(key: string, status: 'done' | 'active' | 'pending'): string | null {
+    const pt = phaseTimes[key]
+    if (!pt) return null
+    const end = pt.end ?? Date.now()
+    return fmtMs(end - pt.start)
+  }
 
   const isFailed = phase === 'error' || pipelinePhase === 'failed'
 
@@ -96,8 +137,9 @@ export default function LoadingState() {
             </div>
           </div>
           <h3 className="text-lg font-semibold text-red-400 mb-2">Analysis Failed</h3>
-          <p className="text-sm text-red-300 mb-4">{error ?? 'Something went wrong. Please try again.'}</p>
-          <p className="text-xs text-red-400">Tip: Ensure your resume and job description contain enough text, then re-run.</p>
+          <p className="text-sm text-red-300 mb-2">{error ?? 'Something went wrong. Please try again.'}</p>
+          <p className="text-xs font-mono" style={{ color: '#ef4444' }}>Failed after {overallElapsed}</p>
+          <p className="text-xs text-red-400 mt-2">Tip: Ensure your resume and job description contain enough text, then re-run.</p>
         </div>
       </div>
     )
@@ -106,6 +148,8 @@ export default function LoadingState() {
   return (
     <div className="card py-10">
       <div className="max-w-lg mx-auto">
+
+        {/* Spinner */}
         <div className="flex justify-center mb-6">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full" style={{ background: 'rgba(99,102,241,0.15)' }}>
             <svg className="animate-spin h-7 w-7" style={{ color: '#818cf8' }} fill="none" viewBox="0 0 24 24">
@@ -115,29 +159,35 @@ export default function LoadingState() {
           </div>
         </div>
 
-        <h3 className="text-lg font-medium text-white text-center mb-1">Analysing your resume…</h3>
+        {/* Title + active phase */}
+        <h3 className="text-lg font-medium text-white text-center mb-1">Analyzing your resume…</h3>
         {currentStep && (
           <p className="text-sm text-center mb-5 font-medium" style={{ color: '#818cf8' }}>
             {currentStep.label}
-            <span className="ml-2 text-xs text-slate-500 font-normal">({currentStep.hint})</span>
           </p>
         )}
 
+        {/* Progress bar */}
         <div className="mb-6">
           <div className="h-2.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.07)' }}>
-            <div className="h-2.5 rounded-full transition-none" style={{ width: `${Math.max(displayPct, 3)}%`, background: 'linear-gradient(90deg,#6366f1,#60a5fa)' }} />
+            <div className="h-2.5 rounded-full transition-none"
+              style={{ width: `${Math.max(displayPct, 3)}%`, background: 'linear-gradient(90deg,#6366f1,#60a5fa)' }} />
           </div>
           <p className="text-xs text-slate-500 text-center mt-1">{Math.round(displayPct)}%</p>
         </div>
 
+        {/* Phase steps with live timers */}
         <div className="space-y-3">
           {PHASE_STEPS.map((step, index) => {
             let status: 'done' | 'active' | 'pending' = 'pending'
             if (index < phaseIdx) status = 'done'
             else if (index === phaseIdx) status = 'active'
 
+            const timer = phaseTimer(step.key, status)
+
             return (
               <div key={step.key} className="flex items-start gap-3">
+                {/* Status icon */}
                 <div className="flex-shrink-0 mt-0.5">
                   {status === 'done' && (
                     <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(34,197,94,0.15)' }}>
@@ -158,8 +208,10 @@ export default function LoadingState() {
                   )}
                 </div>
 
+                {/* Label + agents */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium leading-tight" style={{ color: status === 'done' ? '#22c55e' : status === 'active' ? '#a5b4fc' : '#475569' }}>
+                  <p className="text-sm font-medium leading-tight"
+                    style={{ color: status === 'done' ? '#22c55e' : status === 'active' ? '#a5b4fc' : '#475569' }}>
                     {step.label}
                   </p>
                   <p className="text-xs mt-0.5" style={{ color: status === 'active' ? '#64748b' : '#334155' }}>
@@ -167,15 +219,32 @@ export default function LoadingState() {
                   </p>
                 </div>
 
-                <span className="text-xs font-mono flex-shrink-0 mt-0.5" style={{ color: status === 'done' ? '#22c55e' : status === 'active' ? '#818cf8' : '#334155' }}>
-                  {index + 1}/5
-                </span>
+                {/* Right column: step number + elapsed time */}
+                <div className="flex flex-col items-end flex-shrink-0 mt-0.5 gap-0.5">
+                  <span className="text-xs font-mono"
+                    style={{ color: status === 'done' ? '#22c55e' : status === 'active' ? '#818cf8' : '#334155' }}>
+                    {index + 1}/5
+                  </span>
+                  {timer && (
+                    <span className="text-xs font-mono tabular-nums"
+                      style={{ color: status === 'done' ? '#16a34a' : '#6366f1' }}>
+                      ⏱ {timer}
+                    </span>
+                  )}
+                </div>
               </div>
             )
           })}
         </div>
 
-        <p className="text-center text-xs text-slate-600 mt-6">Total time: 2–4 minutes. Please keep this tab open.</p>
+        {/* Overall elapsed */}
+        <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#6366f1' }} />
+          <p className="text-xs font-mono tabular-nums" style={{ color: '#475569' }}>
+            Elapsed: <span style={{ color: '#818cf8' }}>{overallElapsed}</span>
+          </p>
+        </div>
+
       </div>
     </div>
   )
