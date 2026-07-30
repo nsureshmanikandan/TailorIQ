@@ -98,9 +98,12 @@ function FullTextRenderer({
       }
     }
 
-    // Detect section headings: known list OR all-uppercase line (3–70 chars)
+    // Detect section headings: known list, all-uppercase line, or annotated heading like
+    // "PROFESSIONAL SUMMARY (Targeted: X)" — check base before any ( | :
+    const baseHeading = tUpper.split(/[(:]/)[0].trim()
     const isHeading =
       KNOWN_HEADINGS.has(tUpper) ||
+      KNOWN_HEADINGS.has(baseHeading) ||
       (t === t.toUpperCase() && t.length > 2 && t.length <= 70 && /[A-Z]/.test(t))
 
     if (isHeading) {

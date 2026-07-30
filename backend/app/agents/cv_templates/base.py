@@ -30,6 +30,23 @@ _SECTION_HEADERS = {
 
 _SOURCE_CITATION_RE = re.compile(r'\.\s*Source:\s*[^.]+$', re.IGNORECASE)
 
+def _is_section_heading(stripped: str, known_headers: set) -> bool:
+    """Detect section headings including annotated ones like 'SUMMARY (Targeted: X)'."""
+    if not stripped or len(stripped) < 3:
+        return False
+    upper = stripped.upper()
+    # All-caps short line
+    if stripped.isupper() and len(stripped) <= 70:
+        return True
+    # Exact match in known set
+    if upper in known_headers:
+        return True
+    # Base before any annotation like '(Targeted: ...)' or '| note' or ': note'
+    base = re.split(r'[\(\|:]', upper)[0].strip()
+    if base and base in known_headers:
+        return True
+    return False
+
 
 @dataclass
 class TemplateConfig:
@@ -154,7 +171,7 @@ class CVDocxRenderer:
             if not stripped:
                 continue
             upper = stripped.upper()
-            is_hdr = (stripped.isupper() and 2 < len(stripped) <= 70) or upper in _SECTION_HEADERS
+            is_hdr = _is_section_heading(stripped, _SECTION_HEADERS)
             if is_hdr:
                 in_sidebar = upper in sidebar_sections
                 if in_sidebar:
@@ -191,7 +208,7 @@ class CVDocxRenderer:
                 continue
 
             upper = stripped.upper()
-            is_hdr = (stripped.isupper() and 2 < len(stripped) <= 70) or upper in _SECTION_HEADERS
+            is_hdr = _is_section_heading(stripped, _SECTION_HEADERS)
             if is_hdr:
                 in_excluded = upper in exclude
                 if not in_excluded:
@@ -307,7 +324,7 @@ class CVDocxRenderer:
                 continue
 
             upper = stripped.upper()
-            is_hdr = (stripped.isupper() and 2 < len(stripped) <= 70) or upper in _SECTION_HEADERS
+            is_hdr = _is_section_heading(stripped, _SECTION_HEADERS)
 
             if is_hdr:
                 if upper == "HEADER":
