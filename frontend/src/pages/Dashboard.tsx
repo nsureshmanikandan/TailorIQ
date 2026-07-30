@@ -50,7 +50,7 @@ export default function Dashboard() {
       </header>
 
       {/* Hero */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-14">
         {/* Badge pill */}
         <div className="inline-flex items-center gap-2 mb-5 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider"
           style={{ background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)', color: '#a5b4fc' }}>
@@ -69,7 +69,7 @@ export default function Dashboard() {
         </p>
 
         {/* Feature capability pills */}
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex flex-wrap gap-2 mb-0">
           {FEATURE_PILLS.map((f) => (
             <span key={f} className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
               style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
