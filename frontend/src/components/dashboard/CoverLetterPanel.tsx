@@ -4,90 +4,132 @@ interface Props {
   content: string
 }
 
+function classifyLine(line: string): 'subject' | 'dear' | 'closing' | 'signature' | 'header' | 'blank' | 'body' {
+  const t = line.trim()
+  if (!t) return 'blank'
+  if (/^subject\s*:/i.test(t)) return 'subject'
+  if (/^(re\s*:|ref\s*:)/i.test(t)) return 'subject'
+  if (/^dear\b/i.test(t)) return 'dear'
+  if (/^(sincerely|regards|best regards|yours truly|respectfully|warm regards|kind regards)\b/i.test(t)) return 'closing'
+  // lines after closing that look like a signature (short lines, no punctuation sentence)
+  return 'body'
+}
+
 export default function CoverLetterPanel({ content }: Props) {
-  const lines = content.split('\n')
+  // Split into paragraph blocks
+  const rawParagraphs = content.split(/\n\n+/).map(p => p.trim()).filter(Boolean)
 
-  const paragraphs: { type: 'blank' | 'text'; value: string }[] = []
-  let buffer: string[] = []
+  // If no paragraphs, fall back to line-split
+  const paragraphs = rawParagraphs.length ? rawParagraphs : content.split('\n').filter(l => l.trim())
 
-  for (const line of lines) {
-    if (line.trim() === '') {
-      if (buffer.length) {
-        paragraphs.push({ type: 'text', value: buffer.join('\n') })
-        buffer = []
-      }
-      paragraphs.push({ type: 'blank', value: '' })
-    } else {
-      buffer.push(line)
-    }
-  }
-  if (buffer.length) paragraphs.push({ type: 'text', value: buffer.join('\n') })
+  let pastClosing = false
 
   return (
     <CollapsiblePanel title="Cover Letter" defaultOpen={false}>
-      {/* Letter paper */}
-      <div className="flex justify-center py-2">
+      <div className="flex justify-center py-4">
+        {/* A4-like white paper */}
         <div
-          className="w-full max-w-2xl rounded-xl shadow-lg overflow-hidden"
-          style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}
+          className="w-full"
+          style={{
+            maxWidth: '780px',
+            background: '#ffffff',
+            borderRadius: '4px',
+            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.3), 0 2px 4px -1px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)',
+          }}
         >
-          {/* Letter header bar */}
+          {/* Document top bar — like Word's title bar */}
           <div
-            className="px-10 py-4 flex items-center gap-3"
-            style={{ background: 'linear-gradient(to right, #6366f1, #3b82f6)' }}
+            style={{
+              background: 'linear-gradient(135deg, #6366f1 0%, #3b82f6 100%)',
+              borderRadius: '4px 4px 0 0',
+              padding: '10px 32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
           >
-            <svg className="w-5 h-5 text-white flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            <span className="text-white text-sm font-semibold tracking-wide uppercase">Cover Letter</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span style={{ color: 'white', fontWeight: 600, fontSize: '13px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                Cover Letter
+              </span>
+            </div>
+            <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: '11px' }}>AI-Generated · TailorIQ</span>
           </div>
 
-          {/* Letter body */}
-          <div className="px-10 py-8">
-            {paragraphs.map((block, i) => {
-              if (block.type === 'blank') return <div key={i} className="h-4" />
+          {/* Paper body — letter margins */}
+          <div style={{ padding: '48px 64px 56px', fontFamily: "'Georgia', 'Times New Roman', serif" }}>
 
-              const text = block.value
-              const isSubjectLine = /^subject\s*:/i.test(text.trim())
-              const isDearLine = /^dear\s/i.test(text.trim())
-              const isClosing = /^(sincerely|regards|best regards|yours truly|respectfully)/i.test(text.trim())
+            {paragraphs.map((para, i) => {
+              const firstLine = para.split('\n')[0]
+              const kind = classifyLine(firstLine)
 
-              if (isSubjectLine) {
+              if (kind === 'subject') {
                 return (
-                  <p key={i} className="text-sm font-semibold mb-3" style={{ color: '#1e293b' }}>
-                    {text}
-                  </p>
+                  <div key={i} style={{ marginBottom: '20px' }}>
+                    <p style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b', textDecoration: 'underline', lineHeight: 1.6 }}>
+                      {para}
+                    </p>
+                  </div>
                 )
               }
 
-              if (isDearLine) {
+              if (kind === 'dear') {
                 return (
-                  <p key={i} className="text-sm font-medium mb-4" style={{ color: '#1e293b' }}>
-                    {text}
-                  </p>
+                  <div key={i} style={{ marginBottom: '20px' }}>
+                    <p style={{ fontSize: '14px', fontWeight: 600, color: '#1e293b', lineHeight: 1.6 }}>{para}</p>
+                  </div>
                 )
               }
 
-              if (isClosing) {
+              if (kind === 'closing') {
+                pastClosing = true
                 return (
-                  <p key={i} className="text-sm mt-6" style={{ color: '#334155', whiteSpace: 'pre-wrap' }}>
-                    {text}
-                  </p>
+                  <div key={i} style={{ marginTop: '28px', marginBottom: '4px' }}>
+                    <p style={{ fontSize: '14px', color: '#1e293b', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{para}</p>
+                  </div>
                 )
               }
 
+              if (pastClosing) {
+                // Signature block
+                return (
+                  <div key={i} style={{ marginTop: '4px' }}>
+                    <p style={{ fontSize: '14px', fontWeight: 600, color: '#1e293b', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{para}</p>
+                  </div>
+                )
+              }
+
+              // Body paragraph
               return (
-                <p key={i} className="text-sm leading-relaxed" style={{ color: '#334155', whiteSpace: 'pre-wrap' }}>
-                  {text}
-                </p>
+                <div key={i} style={{ marginBottom: '18px' }}>
+                  <p style={{ fontSize: '14px', color: '#334155', lineHeight: 1.85, textAlign: 'justify', whiteSpace: 'pre-wrap' }}>
+                    {para}
+                  </p>
+                </div>
               )
             })}
           </div>
 
-          {/* Footer */}
-          <div className="px-10 py-3 flex items-center justify-between" style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
-            <span className="text-xs" style={{ color: '#94a3b8' }}>Generated by TailorIQ</span>
-            <span className="text-xs font-medium" style={{ color: '#6366f1' }}>AI-Tailored</span>
+          {/* Document footer */}
+          <div
+            style={{
+              borderTop: '1px solid #e2e8f0',
+              padding: '10px 32px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              background: '#f8fafc',
+              borderRadius: '0 0 4px 4px',
+            }}
+          >
+            <span style={{ fontSize: '11px', color: '#94a3b8' }}>Generated by TailorIQ · AI Resume Optimizer</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#6366f1' }} />
+              <span style={{ fontSize: '11px', color: '#6366f1', fontWeight: 600 }}>AI-Tailored</span>
+            </div>
           </div>
         </div>
       </div>
