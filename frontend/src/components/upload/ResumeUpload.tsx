@@ -40,9 +40,9 @@ export default function ResumeUpload() {
   const pills = ['Match Scoring', 'Gap Analysis', 'Keyword Boost', 'Cover Letter', 'Interview Prep']
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <div className="flex items-center flex-wrap gap-2 mb-3">
-        <h3 className="section-label mb-0" style={{ marginBottom: 0 }}>Resume</h3>
+        <h3 className="section-label" style={{ marginBottom: 0 }}>Resume</h3>
         <div className="flex flex-wrap gap-1.5">
           {pills.map((f) => (
             <span key={f} className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full"
@@ -70,8 +70,8 @@ export default function ResumeUpload() {
       {mode === 'upload' ? (
         <div
           onClick={() => fileRef.current?.click()}
-          className="rounded-xl p-8 text-center cursor-pointer transition-all group"
-          style={{ border: '2px dashed rgba(99,102,241,0.25)', background: 'rgba(99,102,241,0.03)' }}
+          className="rounded-xl cursor-pointer transition-all flex-1 flex flex-col items-center justify-center"
+          style={{ border: '2px dashed rgba(99,102,241,0.25)', background: 'rgba(99,102,241,0.03)', minHeight: '180px' }}
           onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(99,102,241,0.5)'; (e.currentTarget as HTMLDivElement).style.background = 'rgba(99,102,241,0.07)' }}
           onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(99,102,241,0.25)'; (e.currentTarget as HTMLDivElement).style.background = 'rgba(99,102,241,0.03)' }}
         >
@@ -86,7 +86,7 @@ export default function ResumeUpload() {
               <p className="text-sm font-semibold" style={{ color: '#22c55e' }}>{fileName}</p>
             </div>
           ) : (
-            <>
+            <div className="text-center px-6">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ background: 'rgba(99,102,241,0.12)' }}>
                 <svg className="w-6 h-6" style={{ color: '#818cf8' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
@@ -94,18 +94,17 @@ export default function ResumeUpload() {
               </div>
               <p className="text-sm font-medium text-slate-300">Drop your resume here or click to browse</p>
               <p className="text-xs mt-1 text-slate-500">PDF or DOCX · max 5 MB</p>
-            </>
+            </div>
           )}
           {uploading && <p className="text-xs mt-2 font-medium" style={{ color: '#818cf8' }}>Uploading…</p>}
         </div>
       ) : (
-        <div>
+        <div className="flex flex-col flex-1 min-h-0">
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            rows={8}
             placeholder="Paste your resume text here..."
-            className="input-field font-mono text-sm resize-y"
+            className="input-field font-mono text-sm resize-none flex-1 min-h-0"
             maxLength={50000}
           />
           <div className="flex justify-between items-center mt-2">

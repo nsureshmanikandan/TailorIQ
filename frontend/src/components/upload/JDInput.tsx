@@ -27,8 +27,25 @@ export default function JDInput() {
   }
 
   return (
-    <div>
-      <h3 className="section-label">Job Description</h3>
+    <div className="flex flex-col h-full">
+      {/* Header row: label + char count + action button */}
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="section-label" style={{ marginBottom: 0 }}>Job Description</h3>
+        <div className="flex items-center gap-2">
+          {mode === 'text' && (
+            <span className="text-xs text-slate-500">{text.length}/50,000</span>
+          )}
+          {mode === 'text' ? (
+            <button onClick={handleSubmitText} disabled={loading} className="btn-secondary text-sm">
+              {loading ? 'Saving...' : saved ? 'Saved ✓' : 'Save JD'}
+            </button>
+          ) : (
+            <button onClick={handleSubmitUrl} disabled={loading} className="btn-secondary text-sm">
+              {loading ? 'Fetching...' : saved ? 'Fetched ✓' : 'Fetch JD'}
+            </button>
+          )}
+        </div>
+      </div>
 
       {/* Tab switcher — dark */}
       <div className="flex gap-1 mb-3 p-1 rounded-lg w-fit" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}>
@@ -44,24 +61,17 @@ export default function JDInput() {
       </div>
 
       {mode === 'text' ? (
-        <div>
+        <div className="flex flex-col flex-1 min-h-0">
           <textarea
             value={text}
             onChange={(e) => { setText(e.target.value); setSaved(false) }}
-            rows={8}
             placeholder="Paste the job description here..."
-            className="input-field text-sm resize-y"
+            className="input-field text-sm resize-none flex-1 min-h-0"
             maxLength={50000}
           />
-          <div className="flex justify-between items-center mt-2">
-            <span className="text-xs text-slate-500">{text.length}/50,000</span>
-            <button onClick={handleSubmitText} disabled={loading} className="btn-secondary text-sm">
-              {loading ? 'Saving...' : saved ? 'Saved ✓' : 'Save JD'}
-            </button>
-          </div>
         </div>
       ) : (
-        <div>
+        <div className="flex flex-col flex-1 min-h-0">
           <input
             type="url"
             value={url}
@@ -69,11 +79,6 @@ export default function JDInput() {
             placeholder="https://example.com/job/12345"
             className="input-field text-sm"
           />
-          <div className="flex justify-end mt-2">
-            <button onClick={handleSubmitUrl} disabled={loading} className="btn-secondary text-sm">
-              {loading ? 'Fetching...' : saved ? 'Fetched ✓' : 'Fetch JD'}
-            </button>
-          </div>
         </div>
       )}
     </div>
