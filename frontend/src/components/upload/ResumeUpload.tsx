@@ -41,7 +41,7 @@ export default function ResumeUpload() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center flex-wrap gap-2 mb-3">
+      <div className="flex items-center flex-wrap gap-2 mb-3" style={{ minHeight: '28px' }}>
         <h3 className="section-label" style={{ marginBottom: 0 }}>Resume</h3>
         <div className="flex flex-wrap gap-1.5">
           {pills.map((f) => (

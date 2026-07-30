@@ -28,23 +28,18 @@ export default function JDInput() {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header row: label + char count + action button */}
-      <div className="flex items-center justify-between mb-3">
+      {/* Header row: label + action button */}
+      <div className="flex items-center justify-between mb-3" style={{ minHeight: '28px' }}>
         <h3 className="section-label" style={{ marginBottom: 0 }}>Job Description</h3>
-        <div className="flex items-center gap-2">
-          {mode === 'text' && (
-            <span className="text-xs text-slate-500">{text.length}/50,000</span>
-          )}
-          {mode === 'text' ? (
-            <button onClick={handleSubmitText} disabled={loading} className="btn-secondary text-sm">
-              {loading ? 'Saving...' : saved ? 'Saved ✓' : 'Save JD'}
-            </button>
-          ) : (
-            <button onClick={handleSubmitUrl} disabled={loading} className="btn-secondary text-sm">
-              {loading ? 'Fetching...' : saved ? 'Fetched ✓' : 'Fetch JD'}
-            </button>
-          )}
-        </div>
+        {mode === 'text' ? (
+          <button onClick={handleSubmitText} disabled={loading} className="btn-secondary text-sm">
+            {loading ? 'Saving...' : saved ? 'Saved ✓' : 'Save JD'}
+          </button>
+        ) : (
+          <button onClick={handleSubmitUrl} disabled={loading} className="btn-secondary text-sm">
+            {loading ? 'Fetching...' : saved ? 'Fetched ✓' : 'Fetch JD'}
+          </button>
+        )}
       </div>
 
       {/* Tab switcher — dark */}
@@ -61,12 +56,16 @@ export default function JDInput() {
       </div>
 
       {mode === 'text' ? (
-        <div className="flex flex-col flex-1 min-h-0">
+        <div className="relative flex flex-col flex-1 min-h-0">
+          <span className="absolute top-2.5 right-3 text-xs z-10 pointer-events-none select-none" style={{ color: '#475569' }}>
+            {text.length}/50,000
+          </span>
           <textarea
             value={text}
             onChange={(e) => { setText(e.target.value); setSaved(false) }}
             placeholder="Paste the job description here..."
             className="input-field text-sm resize-none flex-1 min-h-0"
+            style={{ paddingRight: '5.5rem' }}
             maxLength={50000}
           />
         </div>
