@@ -48,3 +48,8 @@ logs/
 
 # Generated artifacts (large binaries)
 artifacts/
+
+# AI tool artifacts (Claude Code, Kiro, Superpowers)
+.claude/
+.superpowers/
+.kiro/
