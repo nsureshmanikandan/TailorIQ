@@ -31,14 +31,19 @@ export default function Dashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <span className="text-sm font-bold text-white tracking-tight flex-shrink-0">TailorIQ</span>
-              <span className="text-slate-600 text-sm flex-shrink-0">—</span>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight text-white">
-                Tailor Your{' '}
-                <span style={{ background: 'linear-gradient(90deg, #6366f1, #60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Resume</span>
-                {' '}with AI
-              </h1>
+            <div>
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <span className="text-sm font-bold text-white tracking-tight flex-shrink-0">TailorIQ</span>
+                <span className="text-slate-600 text-sm flex-shrink-0">—</span>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight text-white">
+                  Tailor Your{' '}
+                  <span style={{ background: 'linear-gradient(90deg, #6366f1, #60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Resume</span>
+                  {' '}with AI
+                </h1>
+              </div>
+              <p className="text-slate-400 text-xs sm:text-sm mt-0.5">
+                Actionable score, gap analysis, and AI-tailored sections in seconds.
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-3 flex-shrink-0">
@@ -54,11 +59,8 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* Subtitle + pills strip */}
+      {/* Feature pills strip */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-8">
-        <p className="text-slate-400 text-sm sm:text-base mb-4 max-w-2xl">
-          Actionable score, gap analysis, and AI-tailored sections in seconds.
-        </p>
         <div className="flex flex-wrap gap-2">
           {FEATURE_PILLS.map((f) => (
             <span key={f} className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
