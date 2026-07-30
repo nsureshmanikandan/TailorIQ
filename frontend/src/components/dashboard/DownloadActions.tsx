@@ -12,7 +12,7 @@ export default function DownloadActions({ runId }: Props) {
 
   async function handleDownloadAll() {
     const blob = await downloadAll(runId)
-    triggerDownload(blob, 'tailoriq-package.zip')
+    triggerDownload(blob, 'TailorIQ_Complete_Package.zip')
   }
 
   async function handleEmail() {
@@ -23,19 +23,19 @@ export default function DownloadActions({ runId }: Props) {
   return (
     <div className="flex flex-wrap gap-2">
       <button
-        onClick={() => handleDownload('resume-docx', 'tailored-resume.docx')}
+        onClick={() => handleDownload('resume-docx', 'Tailored_Resume.docx')}
         className="btn-secondary text-sm"
       >
         Resume DOCX
       </button>
       <button
-        onClick={() => handleDownload('resume-pdf', 'tailored-resume.pdf')}
+        onClick={() => handleDownload('resume-pdf', 'Tailored_Resume.pdf')}
         className="btn-secondary text-sm"
       >
         Resume PDF
       </button>
       <button
-        onClick={() => handleDownload('cover-letter-docx', 'cover-letter.docx')}
+        onClick={() => handleDownload('cover-letter-docx', 'Cover_Letter.docx')}
         className="btn-secondary text-sm"
       >
         Cover Letter
