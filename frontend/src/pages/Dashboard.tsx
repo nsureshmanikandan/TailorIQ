@@ -22,18 +22,25 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #080d1a 0%, #0d1635 50%, #080d1a 100%)' }}>
 
-      {/* Header — dark glass */}
+      {/* Header — dark glass with big gradient title */}
       <header className="sticky top-0 z-50 border-b border-white/5" style={{ background: 'rgba(8,13,26,0.85)', backdropFilter: 'blur(12px)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #6366f1, #3b82f6)' }}>
-              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #6366f1, #3b82f6)' }}>
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h1 className="text-xl font-bold text-white tracking-tight">TailorIQ</h1>
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="text-sm font-bold text-white tracking-tight flex-shrink-0">TailorIQ</span>
+              <span className="text-slate-600 text-sm flex-shrink-0">—</span>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight"
+                style={{ background: 'linear-gradient(90deg, #6366f1, #60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                Tailor Your Resume with AI
+              </h1>
+            </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 flex-shrink-0">
             <span className="hidden sm:inline text-sm text-slate-400">{userEmail}</span>
             <button
               onClick={logout}
@@ -46,15 +53,11 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* Hero */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-10">
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-3">
-          Tailor Your <span style={{ background: 'linear-gradient(90deg, #6366f1, #60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Resume</span> with AI
-        </h2>
-        <p className="text-slate-400 text-base sm:text-lg mb-6 max-w-2xl">
+      {/* Subtitle + pills strip */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-8">
+        <p className="text-slate-400 text-sm sm:text-base mb-4 max-w-2xl">
           Actionable score, gap analysis, and AI-tailored sections in seconds.
         </p>
-        {/* Feature capability pills */}
         <div className="flex flex-wrap gap-2">
           {FEATURE_PILLS.map((f) => (
             <span key={f} className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
