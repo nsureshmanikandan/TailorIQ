@@ -50,20 +50,26 @@ export default function JDInput() {
 
   return (
     <div>
-      <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
-        Job Description
-      </h3>
+      <h3 className="section-label">Job Description</h3>
 
-      <div className="flex gap-2 mb-3">
+      <div className="flex gap-1.5 mb-3 bg-gray-100 p-1 rounded-lg w-fit">
         <button
           onClick={() => { setMode('text'); setSaved(false) }}
-          className={`text-sm px-3 py-1 rounded ${mode === 'text' ? 'bg-brand-100 text-brand-700' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`text-sm px-4 py-1.5 rounded-md font-medium transition-all ${
+            mode === 'text'
+              ? 'bg-white text-indigo-700 shadow-sm'
+              : 'text-gray-500 hover:text-gray-700'
+          }`}
         >
           Paste Text
         </button>
         <button
           onClick={() => { setMode('url'); setSaved(false) }}
-          className={`text-sm px-3 py-1 rounded ${mode === 'url' ? 'bg-brand-100 text-brand-700' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`text-sm px-4 py-1.5 rounded-md font-medium transition-all ${
+            mode === 'url'
+              ? 'bg-white text-indigo-700 shadow-sm'
+              : 'text-gray-500 hover:text-gray-700'
+          }`}
         >
           From URL
         </button>

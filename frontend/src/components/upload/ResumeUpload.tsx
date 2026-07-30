@@ -56,18 +56,26 @@ export default function ResumeUpload() {
 
   return (
     <div>
-      <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Resume</h3>
+      <h3 className="section-label">Resume</h3>
 
-      <div className="flex gap-2 mb-3">
+      <div className="flex gap-1.5 mb-3 bg-gray-100 p-1 rounded-lg w-fit">
         <button
           onClick={() => setMode('upload')}
-          className={`text-sm px-3 py-1 rounded ${mode === 'upload' ? 'bg-brand-100 text-brand-700' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`text-sm px-4 py-1.5 rounded-md font-medium transition-all ${
+            mode === 'upload'
+              ? 'bg-white text-indigo-700 shadow-sm'
+              : 'text-gray-500 hover:text-gray-700'
+          }`}
         >
           Upload File
         </button>
         <button
           onClick={() => setMode('paste')}
-          className={`text-sm px-3 py-1 rounded ${mode === 'paste' ? 'bg-brand-100 text-brand-700' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`text-sm px-4 py-1.5 rounded-md font-medium transition-all ${
+            mode === 'paste'
+              ? 'bg-white text-indigo-700 shadow-sm'
+              : 'text-gray-500 hover:text-gray-700'
+          }`}
         >
           Paste Text
         </button>
@@ -76,7 +84,7 @@ export default function ResumeUpload() {
       {mode === 'upload' ? (
         <div
           onClick={() => fileRef.current?.click()}
-          className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-brand-400 transition-colors"
+          className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center cursor-pointer hover:border-indigo-400 hover:bg-indigo-50/40 transition-all group"
         >
           <input
             ref={fileRef}
@@ -86,16 +94,28 @@ export default function ResumeUpload() {
             className="hidden"
           />
           {fileName ? (
-            <p className="text-sm text-brand-600 font-medium">{fileName} ✓</p>
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p className="text-sm text-green-700 font-semibold">{fileName}</p>
+            </div>
           ) : (
             <>
-              <p className="text-gray-500 text-sm">
-                Drop your resume here or click to browse
-              </p>
-              <p className="text-gray-400 text-xs mt-1">PDF or DOCX, max 5 MB</p>
+              <div className="w-12 h-12 rounded-xl bg-indigo-50 group-hover:bg-indigo-100 flex items-center justify-center mx-auto mb-3 transition-colors">
+                <svg className="w-6 h-6 text-indigo-400 group-hover:text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+              </div>
+              <p className="text-gray-600 text-sm font-medium">Drop your resume here or click to browse</p>
+              <p className="text-gray-400 text-xs mt-1">PDF or DOCX · max 5 MB</p>
             </>
           )}
-          {uploading && <p className="text-xs text-brand-500 mt-2">Uploading...</p>}
+          {uploading && (
+            <p className="text-xs text-indigo-500 mt-2 font-medium">Uploading…</p>
+          )}
         </div>
       ) : (
         <div>
