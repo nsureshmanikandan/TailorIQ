@@ -60,7 +60,7 @@ export default function JDInput() {
       </div>
 
       {mode === 'text' ? (
-        <div className="relative flex flex-col flex-1 min-h-0">
+        <div className="relative flex flex-col flex-1 min-h-0" style={{ marginTop: '17px' }}>
           <span className="absolute top-2.5 right-3 text-xs z-10 pointer-events-none select-none" style={{ color: '#475569' }}>
             {text.length}/50,000
           </span>
