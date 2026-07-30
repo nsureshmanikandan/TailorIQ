@@ -1,7 +1,75 @@
 import { useState } from 'react'
-import { TEMPLATES } from './templateDefinitions'
+import { TEMPLATES, TemplateDefinition } from './templateDefinitions'
 import { downloadCvTemplate, triggerDownload } from '../../api/downloads'
 import { useAnalysisStore } from '../../store/analysisStore'
+import '../../styles/cv-templates.css'
+
+// Scaled-down live preview using the actual tmpl-X CSS classes
+function MiniCVPreview({ tpl }: { tpl: TemplateDefinition }) {
+  const SCALE = 0.40
+  const INV = `${(100 / SCALE).toFixed(1)}%`
+
+  const isTwo = tpl.layout === 'two-column'
+
+  return (
+    <div style={{ height: '160px', position: 'relative', overflow: 'hidden', background: 'white' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, transformOrigin: 'top left', transform: `scale(${SCALE})`, width: INV, height: INV }}>
+        {isTwo ? (
+          <div className={`cv-preview tmpl-${tpl.id}`} style={{ display: 'flex', minHeight: '400px', fontSize: '13px' }}>
+            <div className="cv-sidebar">
+              <div className="cv-name">SURESH M.</div>
+              <div className="cv-designation">AI Architect</div>
+              <div className="cv-section">
+                <div className="cv-section-heading">SKILLS</div>
+                <div className="cv-section-body">{'Azure OpenAI\nLangGraph\nFastAPI\nDocker'}</div>
+              </div>
+              <div className="cv-section">
+                <div className="cv-section-heading">CERTS</div>
+                <div className="cv-section-body">{'AZ-305\nAZ-204'}</div>
+              </div>
+            </div>
+            <div className="cv-main-col">
+              <div className="cv-section">
+                <div className="cv-section-heading">SUMMARY</div>
+                <div className="cv-section-body">23yr AI Architect. Fortune 500. 5 production agentic platforms. $10M+ savings.</div>
+              </div>
+              <div className="cv-section">
+                <div className="cv-section-heading">EXPERIENCE</div>
+                <div className="cv-section-body">{'Technical Program Manager\nAccenture · Jul 2008 – Present'}</div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className={`cv-preview tmpl-${tpl.id}`} style={{ fontSize: '13px', lineHeight: '1.5' }}>
+            <div className="cv-preview-header">
+              {tpl.id === 'tech_pro' && <div className="cv-prompt">user@tailoriq:~$ cat resume.txt</div>}
+              <div className="cv-name">SURESH MANIKANDAN</div>
+              <div className="cv-designation">Senior Enterprise AI Architect</div>
+              <div className="cv-contact">Chennai · suresh@email.com · +91 98765 43210</div>
+              {tpl.id === 'corporate_blue'     && <div className="cv-divider" />}
+              {tpl.id === 'green_professional' && <div className="cv-accent-bar" />}
+              {tpl.id === 'elegant_serif'      && <div className="cv-orn">— ✦ —</div>}
+            </div>
+            <div className="cv-preview-body">
+              <div className="cv-section">
+                <div className="cv-section-heading">PROFESSIONAL SUMMARY</div>
+                <div className="cv-section-body">Senior AI Architect, 23 years. Fortune 500 AI/ML delivery. Expert in Azure OpenAI, LangGraph, RAG pipelines.</div>
+              </div>
+              <div className="cv-section">
+                <div className="cv-section-heading">EXPERIENCE</div>
+                <div className="cv-section-body">{'Technical Program Manager — Accenture\nJul 2008 – Present · Chennai'}</div>
+              </div>
+              <div className="cv-section">
+                <div className="cv-section-heading">CORE SKILLS</div>
+                <div className="cv-section-body">Azure OpenAI · LangGraph · FastAPI · Docker · PostgreSQL</div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
 
 export default function TemplateSelector({ runId }: { runId: string }) {
   const { selectedTemplate, setSelectedTemplate } = useAnalysisStore()
@@ -37,40 +105,8 @@ export default function TemplateSelector({ runId }: { runId: string }) {
                   : 'border-gray-200 hover:border-indigo-300 hover:shadow-md'
               }`}
             >
-              {/* Accent stripe */}
-              <div
-                className="h-2 w-full"
-                style={{ background: tpl.accentColor }}
-              />
-
-              {/* Mini CV preview */}
-              <div className="p-2.5 bg-white">
-                {/* Simulated name bar */}
-                <div
-                  className="h-2 rounded mb-1.5 w-3/4"
-                  style={{ background: tpl.headerBg ?? tpl.headingColor, opacity: 0.9 }}
-                />
-                {/* Simulated heading */}
-                <div
-                  className="h-1.5 rounded mb-1 w-1/2"
-                  style={{ background: tpl.headingColor, opacity: 0.7 }}
-                />
-                {/* Simulated body lines */}
-                <div className="space-y-1">
-                  <div className="h-1 rounded bg-gray-200 w-full" />
-                  <div className="h-1 rounded bg-gray-200 w-5/6" />
-                  <div className="h-1 rounded bg-gray-200 w-4/6" />
-                </div>
-                {/* Second heading */}
-                <div
-                  className="h-1.5 rounded mt-2 mb-1 w-2/5"
-                  style={{ background: tpl.headingColor, opacity: 0.7 }}
-                />
-                <div className="space-y-1">
-                  <div className="h-1 rounded bg-gray-200 w-full" />
-                  <div className="h-1 rounded bg-gray-200 w-3/4" />
-                </div>
-              </div>
+              {/* Live mini CV preview */}
+              <MiniCVPreview tpl={tpl} />
 
               {/* Label */}
               <div className="px-2.5 pb-2.5">
