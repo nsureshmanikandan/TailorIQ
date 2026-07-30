@@ -332,8 +332,10 @@ class CVDocxRenderer:
                     continue
                 in_contact = False
                 first_section_seen = True
-                doc.add_paragraph()  # spacer
                 p = doc.add_paragraph()
+                # CSS .cv-section { margin-top: 16px } ≈ 12pt before heading
+                p.paragraph_format.space_before = Pt(12)
+                p.paragraph_format.space_after = Pt(3)
                 self._apply_heading_style(p, stripped)
             elif in_contact:
                 continue  # always skip contact/header section content
@@ -341,9 +343,11 @@ class CVDocxRenderer:
                 continue  # skip preamble lines (contact, designation, etc.) before first section
             else:
                 p = doc.add_paragraph()
+                p.paragraph_format.space_before = Pt(0)
+                p.paragraph_format.space_after = Pt(2)
                 r = p.add_run(stripped)
                 r.font.name = cfg.font_name
-                r.font.size = Pt(10)   # CSS 12px → 10pt
+                r.font.size = Pt(10)   # CSS 12px → 10pt; kept at 10pt for print readability
 
     def _apply_heading_style(self, para, heading_text):
         cfg = self.cfg

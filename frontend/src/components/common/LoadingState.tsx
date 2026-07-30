@@ -79,7 +79,11 @@ export default function LoadingState() {
     const now = Date.now()
     const prev = prevPhaseIdx.current
 
-    if (prev >= 0 && prev < PHASE_STEPS.length) {
+    // Guard: only end the previous phase when the index actually changed.
+    // Without this, React Strict Mode's double-invocation fires the effect
+    // twice on mount (both times phaseIdx=0), and the second run immediately
+    // sets phase_1.end = now — freezing the timer at 0s forever.
+    if (prev >= 0 && prev < PHASE_STEPS.length && prev !== phaseIdx) {
       const prevKey = PHASE_STEPS[prev].key
       if (phaseTimesRef.current[prevKey] && !phaseTimesRef.current[prevKey].end) {
         phaseTimesRef.current[prevKey].end = now

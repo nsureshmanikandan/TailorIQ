@@ -314,21 +314,47 @@ async def download_cv_template(
         )
 
     # Extract candidate info from the raw parsed_resume JSON.
-    # The LLM returns contact_info as a nested dict and current_title at the top level;
-    # reading the raw dict avoids schema field-mapping losses from ParsedResume.model_validate().
+    # ParsedResume uses flat top-level fields (not a nested contact_info).
+    # LinkedIn and designation are extracted with regex fallbacks from full_text
+    # because the LLM sometimes omits them from the structured schema fields.
+    import re as _re
     candidate_name = "Candidate"
     contact_info: dict = {}
+    full_text_for_header = ""
+    if match_result.tailored_resume:
+        full_text_for_header = (match_result.tailored_resume.get("full_text") or "")
     if match_result.parsed_resume:
         try:
             raw = match_result.parsed_resume  # already a dict stored as JSON
             candidate_name = raw.get("candidate_name") or "Candidate"
-            raw_ci = raw.get("contact_info") or {}
+
+            # LinkedIn: flat schema field first, then regex from full_text
+            linkedin = raw.get("linkedin_url") or raw.get("linkedin") or ""
+            if not linkedin and full_text_for_header:
+                m = _re.search(r'linkedin\.com/in/[\w-]+', full_text_for_header, _re.IGNORECASE)
+                if m:
+                    linkedin = m.group(0)
+
+            # Designation: pull Target Title / Target Role line from full_text preamble
+            # (ParsedResume has no current_title field — this info only lives in full_text)
+            designation = raw.get("current_title") or raw.get("designation") or ""
+            if not designation and full_text_for_header:
+                for line in full_text_for_header.split("\n")[:15]:
+                    stripped = line.strip()
+                    if _re.match(
+                        r'^(Target\s+(?:Title|Role)|Seeking|Current\s+Title|Designation)\s*[:\-]',
+                        stripped,
+                        _re.IGNORECASE,
+                    ):
+                        designation = stripped
+                        break
+
             contact_info = {
-                "location": raw_ci.get("location") or raw.get("location") or "",
-                "email": raw_ci.get("email") or raw.get("email") or "",
-                "phone": raw_ci.get("phone") or raw.get("phone") or "",
-                "linkedin": raw_ci.get("linkedin_url") or raw.get("linkedin_url") or "",
-                "designation": raw.get("current_title") or "",
+                "location": raw.get("location") or "",
+                "email": raw.get("email") or "",
+                "phone": raw.get("phone") or "",
+                "linkedin": linkedin,
+                "designation": designation,
             }
         except Exception:
             logger.warning("Could not extract contact info for run %s — using defaults", run_id)
