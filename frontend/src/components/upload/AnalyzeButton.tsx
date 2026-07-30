@@ -44,7 +44,7 @@ export default function AnalyzeButton() {
 
   return (
     <button onClick={handleAnalyze} disabled={!canAnalyze} className="btn-primary text-lg px-10 py-4">
-      {phase === 'analyzing' ? 'Analysing...' : 'Analyse & Tailor'}
+      {phase === 'analyzing' ? 'Analyzing...' : 'Analyze & Tailor'}
     </button>
   )
 }

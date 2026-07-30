@@ -33,14 +33,14 @@ export default function JDInput() {
         <h3 className="section-label" style={{ marginBottom: 0 }}>Job Description</h3>
         {mode === 'text' ? (
           <button onClick={handleSubmitText} disabled={loading}
-            className="text-sm px-4 py-1.5 rounded-lg font-medium transition-all disabled:opacity-50"
-            style={{ background: '#6366f1', color: '#fff' }}>
+            className="text-sm px-4 py-1.5 rounded-lg font-semibold transition-all disabled:opacity-50 shadow-md"
+            style={{ background: 'linear-gradient(to right, #6366f1, #3b82f6)', color: '#fff' }}>
             {loading ? 'Saving...' : saved ? 'Saved ✓' : 'Save JD'}
           </button>
         ) : (
           <button onClick={handleSubmitUrl} disabled={loading}
-            className="text-sm px-4 py-1.5 rounded-lg font-medium transition-all disabled:opacity-50"
-            style={{ background: '#6366f1', color: '#fff' }}>
+            className="text-sm px-4 py-1.5 rounded-lg font-semibold transition-all disabled:opacity-50 shadow-md"
+            style={{ background: 'linear-gradient(to right, #6366f1, #3b82f6)', color: '#fff' }}>
             {loading ? 'Fetching...' : saved ? 'Fetched ✓' : 'Fetch JD'}
           </button>
         )}
