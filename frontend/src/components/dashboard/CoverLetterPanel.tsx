@@ -7,7 +7,7 @@ interface Props {
 export default function CoverLetterPanel({ content }: Props) {
   return (
     <CollapsiblePanel title="Cover Letter" defaultOpen={false}>
-      <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-wrap leading-relaxed">
+      <div className="text-sm text-slate-300 whitespace-pre-wrap leading-relaxed">
         {content}
       </div>
     </CollapsiblePanel>

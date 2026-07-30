@@ -11,68 +11,36 @@ export default function JDInput() {
   const { setJdId, setPhase } = useAnalysisStore()
 
   async function handleSubmitText() {
-    if (!text.trim() || text.length > 50000) {
-      alert('JD text must be between 1 and 50,000 characters')
-      return
-    }
-    setLoading(true)
-    setPhase('uploading')
-    try {
-      const res = await submitJDText(text)
-      setJdId(res.jd_id)
-      setSaved(true)
-    } catch {
-      alert('Failed to save JD')
-    } finally {
-      setLoading(false)
-      setPhase('idle')
-    }
+    if (!text.trim() || text.length > 50000) { alert('JD text must be between 1 and 50,000 characters'); return }
+    setLoading(true); setPhase('uploading')
+    try { const res = await submitJDText(text); setJdId(res.jd_id); setSaved(true) }
+    catch { alert('Failed to save JD') }
+    finally { setLoading(false); setPhase('idle') }
   }
 
   async function handleSubmitUrl() {
-    if (!url.trim()) {
-      alert('Please enter a URL')
-      return
-    }
-    setLoading(true)
-    setPhase('uploading')
-    try {
-      const res = await submitJDUrl(url)
-      setJdId(res.jd_id)
-      setSaved(true)
-    } catch {
-      alert('Could not fetch JD from URL. Please paste the text instead.')
-    } finally {
-      setLoading(false)
-      setPhase('idle')
-    }
+    if (!url.trim()) { alert('Please enter a URL'); return }
+    setLoading(true); setPhase('uploading')
+    try { const res = await submitJDUrl(url); setJdId(res.jd_id); setSaved(true) }
+    catch { alert('Could not fetch JD from URL. Please paste the text instead.') }
+    finally { setLoading(false); setPhase('idle') }
   }
 
   return (
     <div>
       <h3 className="section-label">Job Description</h3>
 
-      <div className="flex gap-1.5 mb-3 bg-gray-100 p-1 rounded-lg w-fit">
-        <button
-          onClick={() => { setMode('text'); setSaved(false) }}
-          className={`text-sm px-4 py-1.5 rounded-md font-medium transition-all ${
-            mode === 'text'
-              ? 'bg-white text-indigo-700 shadow-sm'
-              : 'text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          Paste Text
-        </button>
-        <button
-          onClick={() => { setMode('url'); setSaved(false) }}
-          className={`text-sm px-4 py-1.5 rounded-md font-medium transition-all ${
-            mode === 'url'
-              ? 'bg-white text-indigo-700 shadow-sm'
-              : 'text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          From URL
-        </button>
+      {/* Tab switcher — dark */}
+      <div className="flex gap-1 mb-3 p-1 rounded-lg w-fit" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}>
+        {([['text', 'Paste Text'], ['url', 'From URL']] as const).map(([m, label]) => (
+          <button key={m} onClick={() => { setMode(m); setSaved(false) }}
+            className="text-sm px-4 py-1.5 rounded-md font-medium transition-all"
+            style={mode === m
+              ? { background: '#6366f1', color: '#fff' }
+              : { color: '#64748b' }}>
+            {label}
+          </button>
+        ))}
       </div>
 
       {mode === 'text' ? (
@@ -86,7 +54,7 @@ export default function JDInput() {
             maxLength={50000}
           />
           <div className="flex justify-between items-center mt-2">
-            <span className="text-xs text-gray-400">{text.length}/50,000</span>
+            <span className="text-xs text-slate-500">{text.length}/50,000</span>
             <button onClick={handleSubmitText} disabled={loading} className="btn-secondary text-sm">
               {loading ? 'Saving...' : saved ? 'Saved ✓' : 'Save JD'}
             </button>

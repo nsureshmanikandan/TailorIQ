@@ -21,28 +21,22 @@ export default function CategoryBreakdown({ pass1Categories, pass2Categories }: 
         const label = CATEGORY_LABELS[cat.category] || cat.category
 
         return (
-          <div key={cat.category} className="bg-gray-50 rounded-lg p-4">
+          <div key={cat.category} className="rounded-lg p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-gray-700">{label}</span>
-              <span className="text-xs text-gray-500">{Math.round(cat.weight * 100)}% weight</span>
+              <span className="text-sm font-medium text-slate-300">{label}</span>
+              <span className="text-xs text-slate-500">{Math.round(cat.weight * 100)}% weight</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-500 w-8">{cat.score}</span>
-              <div className="flex-1 h-2 bg-gray-200 rounded-full relative">
-                <div
-                  className="absolute h-2 bg-gray-400 rounded-full opacity-50"
-                  style={{ width: `${cat.score}%` }}
-                />
-                <div
-                  className="absolute h-2 bg-brand-500 rounded-full"
-                  style={{ width: `${after?.score ?? cat.score}%` }}
-                />
+              <span className="text-sm text-slate-500 w-8">{cat.score}</span>
+              <div className="flex-1 h-2 rounded-full relative" style={{ background: 'rgba(255,255,255,0.06)' }}>
+                <div className="absolute h-2 rounded-full opacity-40" style={{ width: `${cat.score}%`, background: '#6366f1' }} />
+                <div className="absolute h-2 rounded-full" style={{ width: `${after?.score ?? cat.score}%`, background: 'linear-gradient(90deg,#6366f1,#60a5fa)' }} />
               </div>
-              <span className="text-sm font-medium text-brand-600 w-8">
+              <span className="text-sm font-medium w-8" style={{ color: '#818cf8' }}>
                 {after?.score ?? cat.score}
               </span>
               {delta > 0 && (
-                <span className="text-xs text-green-600 font-medium">+{delta}</span>
+                <span className="text-xs font-medium" style={{ color: '#22c55e' }}>+{delta}</span>
               )}
             </div>
           </div>

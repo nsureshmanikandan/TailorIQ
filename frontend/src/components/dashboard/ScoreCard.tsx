@@ -4,9 +4,9 @@ interface Props {
 }
 
 function getColor(score: number) {
-  if (score >= 80) return { stroke: '#16a34a', text: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200', label: 'text-green-600' }
-  if (score >= 60) return { stroke: '#d97706', text: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200', label: 'text-amber-600' }
-  return { stroke: '#dc2626', text: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200', label: 'text-red-600' }
+  if (score >= 80) return { stroke: '#22c55e', text: '#22c55e', bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.25)', delta: '#22c55e' }
+  if (score >= 60) return { stroke: '#f59e0b', text: '#f59e0b', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.25)', delta: '#f59e0b' }
+  return { stroke: '#ef4444', text: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.25)', delta: '#ef4444' }
 }
 
 function CircleScore({ score, label, dim = false }: { score: number; label: string; dim?: boolean }) {
@@ -17,12 +17,10 @@ function CircleScore({ score, label, dim = false }: { score: number; label: stri
 
   return (
     <div className="flex flex-col items-center gap-1.5">
-      <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">{label}</p>
+      <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">{label}</p>
       <div className="relative">
         <svg width="100" height="100" viewBox="0 0 100 100">
-          {/* Track */}
-          <circle cx="50" cy="50" r={R} fill="none" stroke="#e5e7eb" strokeWidth="8" />
-          {/* Progress */}
+          <circle cx="50" cy="50" r={R} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="8" />
           {!dim && (
             <circle
               cx="50" cy="50" r={R}
@@ -38,8 +36,8 @@ function CircleScore({ score, label, dim = false }: { score: number; label: stri
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
           {dim
-            ? <span className="text-2xl font-bold text-gray-300">—</span>
-            : <span className={`text-2xl font-bold ${c.text}`}>{score}</span>
+            ? <span className="text-2xl font-bold text-slate-600">—</span>
+            : <span className="text-2xl font-bold" style={{ color: c.text }}>{score}</span>
           }
         </div>
       </div>
@@ -57,11 +55,11 @@ export default function ScoreCard({ pass1, pass2 }: Props) {
 
       {/* Arrow */}
       <div className="flex flex-col items-center gap-1">
-        <svg className="w-8 h-8 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <svg className="w-8 h-8" style={{ color: '#6366f1' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
         </svg>
         {delta !== null && delta > 0 && (
-          <span className="text-xs font-bold text-green-600 bg-green-50 border border-green-200 rounded-full px-2 py-0.5">
+          <span className="text-xs font-bold rounded-full px-2 py-0.5" style={{ color: '#22c55e', background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.25)' }}>
             +{delta}
           </span>
         )}
@@ -69,19 +67,17 @@ export default function ScoreCard({ pass1, pass2 }: Props) {
 
       <CircleScore score={pass2 ?? 0} label="Tailored" dim={pass2 === null} />
 
-      {/* Pending badge */}
       {pass2 === null && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-center">
-          <p className="text-sm font-bold text-amber-600">Pending</p>
-          <p className="text-xs text-amber-500 mt-0.5">re-run to score</p>
+        <div className="rounded-xl px-4 py-3 text-center" style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)' }}>
+          <p className="text-sm font-bold" style={{ color: '#f59e0b' }}>Pending</p>
+          <p className="text-xs mt-0.5" style={{ color: '#d97706' }}>re-run to score</p>
         </div>
       )}
 
-      {/* Delta card */}
       {delta !== null && delta > 0 && (
-        <div className={`${c2?.bg} border ${c2?.border} rounded-xl px-4 py-3 text-center`}>
-          <p className={`text-2xl font-bold ${c2?.text}`}>+{delta}</p>
-          <p className={`text-xs ${c2?.label} mt-0.5`}>pts improvement</p>
+        <div className="rounded-xl px-4 py-3 text-center" style={{ background: c2?.bg, border: `1px solid ${c2?.border}` }}>
+          <p className="text-2xl font-bold" style={{ color: c2?.text }}>+{delta}</p>
+          <p className="text-xs mt-0.5" style={{ color: c2?.delta }}>pts improvement</p>
         </div>
       )}
     </div>

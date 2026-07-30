@@ -4,41 +4,47 @@
 
 @layer base {
   html { scroll-behavior: smooth; }
-  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: #080d1a;
+  }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-gradient-to-r from-indigo-600 to-violet-600
-      hover:from-indigo-700 hover:to-violet-700
-      text-white font-semibold px-6 py-3 rounded-xl
-      transition-all duration-200 shadow-sm hover:shadow-md
-      focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
-      disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-gradient-to-r from-indigo-500 to-blue-500
+      hover:from-indigo-400 hover:to-blue-400
+      text-white font-bold px-6 py-3 rounded-xl
+      transition-all duration-200 shadow-lg
+      focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-[#111827]
+      disabled:opacity-40 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply bg-white border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50
-      text-gray-700 hover:text-indigo-700 font-medium px-4 py-2 rounded-lg
+    @apply bg-white/10 border border-white/15 hover:border-white/20 hover:bg-white/15
+      text-slate-300 hover:text-white font-medium px-4 py-2 rounded-lg
       transition-all duration-200
-      focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2;
+      focus:outline-none focus:ring-2 focus:ring-indigo-500;
   }
 
+  /* Dark card — used for most sections */
   .card {
+    @apply bg-[#0f1729] border border-white/10 rounded-2xl p-6;
+  }
+
+  /* Light card — used only for CV preview wrapper */
+  .card-light {
     @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-6;
   }
 
-  .card-highlight {
-    @apply bg-white rounded-2xl shadow-md border border-indigo-100 p-6;
-  }
-
   .input-field {
-    @apply w-full px-4 py-3 border border-gray-200 rounded-xl
+    @apply w-full px-4 py-3 border border-white/10 rounded-xl
+      bg-[#080d1a] text-white placeholder-slate-500
       focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
-      transition-all duration-200 bg-white;
+      transition-all duration-200;
   }
 
   .section-label {
-    @apply text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-3;
+    @apply text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-3;
   }
 }
