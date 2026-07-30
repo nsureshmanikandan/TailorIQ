@@ -19,6 +19,9 @@
 .cv-name           { font-size: 22px; font-weight: 700; line-height: 1.2; }
 .cv-designation    { font-size: 13px; font-weight: 600; margin-top: 3px; }
 .cv-contact        { font-size: 11px; margin-top: 4px; }
+.cv-contact-row    { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 6px; }
+.cv-contact-item   { display: flex; align-items: center; gap: 4px; font-size: 11px; }
+.cv-contact-icon   { font-size: 10px; opacity: 0.7; }
 .cv-section        { margin-top: 16px; }
 .cv-section-heading {
   font-size: 12px; font-weight: 700; text-transform: uppercase;

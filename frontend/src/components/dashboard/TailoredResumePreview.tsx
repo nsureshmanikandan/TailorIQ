@@ -145,12 +145,16 @@ export default function TailoredResumePreview({ resume, parsedResume, selectedTe
   const candidateName = parsedResume?.candidate_name ?? 'Candidate'
   const designation = parsedResume?.current_title ?? ''
   const contact = parsedResume?.contact_info
-  const contactLine = [
-    contact?.location,
-    contact?.email,
-    contact?.phone,
-    contact?.linkedin_url,
-  ].filter(Boolean).join('  ·  ')
+
+  // Build contact fields; fall back to regex extraction from full_text when fields are missing
+  const rawText = resume.full_text ?? ''
+  const fallbackEmail    = contact?.email    ?? (rawText.match(/[\w.+-]+@[\w-]+\.[a-z]{2,}/i)?.[0] ?? '')
+  const fallbackPhone    = contact?.phone    ?? (rawText.match(/(\+?\d[\d\s\-().]{7,}\d)/)?.[1] ?? '')
+  const fallbackLinkedin = contact?.linkedin_url ?? (rawText.match(/linkedin\.com\/in\/[\w-]+/i)?.[0] ?? '')
+  const fallbackLocation = contact?.location ?? ''
+
+  const contactParts = [fallbackLocation, fallbackEmail, fallbackPhone, fallbackLinkedin].filter(Boolean)
+  const contactLine = contactParts.join('  ·  ')
 
   const isTwoCol = TWO_COLUMN_TEMPLATES.has(selectedTemplate)
 
@@ -185,9 +189,9 @@ export default function TailoredResumePreview({ resume, parsedResume, selectedTe
               {designation && <div className="cv-designation">{designation}</div>}
 
               {/* Contact info in sidebar */}
-              {contact && (
+              {contactParts.length > 0 && (
                 <div className="cv-sidebar-contact">
-                  {contact.split('  ·  ').map((item, i) => (
+                  {contactParts.map((item, i) => (
                     <div key={i} className="cv-sidebar-contact-item">{item}</div>
                   ))}
                 </div>
@@ -218,7 +222,7 @@ export default function TailoredResumePreview({ resume, parsedResume, selectedTe
               template={selectedTemplate}
               name={candidateName}
               designation={designation}
-              contact={contactLine}
+              contactParts={contactParts}
             />
             <div className="cv-preview-body">
               {sectionsWellStructured
@@ -291,21 +295,43 @@ export default function TailoredResumePreview({ resume, parsedResume, selectedTe
 
 // ── Header block ──────────────────────────────────────────────────────────────
 function HeaderBlock({
-  template, name, designation, contact,
+  template, name, designation, contactParts,
 }: {
-  template: string; name: string; designation: string; contact: string
+  template: string; name: string; designation: string; contactParts: string[]
 }) {
   const isSerif = template === 'elegant_serif'
   const isCorporate = template === 'corporate_blue'
   const isGreen = template === 'green_professional'
   const isTech = template === 'tech_pro'
 
+  const icons: Record<string, string> = {
+    email: '✉',
+    phone: '☎',
+    linkedin: '🔗',
+    location: '📍',
+  }
+  function iconFor(val: string) {
+    if (val.includes('@')) return icons.email
+    if (/\+?\d[\d\s\-().]{5,}/.test(val)) return icons.phone
+    if (/linkedin/i.test(val)) return icons.linkedin
+    return icons.location
+  }
+
   return (
     <div className="cv-preview-header">
       {isTech && <div className="cv-prompt">user@tailoriq:~$ cat resume.txt</div>}
       <div className="cv-name">{name}</div>
       {designation && <div className="cv-designation">{designation}</div>}
-      {contact && <div className="cv-contact">{contact}</div>}
+      {contactParts.length > 0 && (
+        <div className="cv-contact cv-contact-row">
+          {contactParts.map((item, i) => (
+            <span key={i} className="cv-contact-item">
+              <span className="cv-contact-icon">{iconFor(item)}</span>
+              {item}
+            </span>
+          ))}
+        </div>
+      )}
       {isSerif && <div className="cv-orn">— ✦ —</div>}
       {isCorporate && <div className="cv-divider" />}
       {isGreen && <div className="cv-accent-bar" />}
