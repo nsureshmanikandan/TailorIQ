@@ -50,6 +50,9 @@ class TemplateConfig:
     contact_align: str = "center"
     # Two-column layout: (sidebar_width_fraction, sidebar_bg_color)
     two_column: Optional[tuple] = None
+    # Header bottom rule (for plain white headers that have a border-bottom)
+    header_rule_color: Optional[tuple] = None  # None = no rule
+    header_rule_sz: int = 16  # border size in 8ths of a point (16 = 2pt)
     # Misc
     heading_uppercase: bool = True
     serif_font: bool = False
@@ -282,6 +285,12 @@ class CVDocxRenderer:
             cr.font.size = Pt(10)
             cr.font.color.rgb = RGBColor(90, 90, 90)
 
+        # Bottom border rule under the header block (e.g. ATS Classic, Harvard)
+        if cfg.header_rule_color:
+            rule_p = doc.add_paragraph()
+            rule_p.alignment = align
+            _add_bottom_border(rule_p, cfg.header_rule_color, cfg.header_rule_sz)
+
     # ── Body renderer ─────────────────────────────────────────────────
 
     def _render_body(self, doc, full_text, candidate_name, skip_contact=False):
@@ -337,7 +346,12 @@ class CVDocxRenderer:
             _shade_paragraph(para, cfg.heading_color)
             r.font.color.rgb = RGBColor(255, 255, 255)
         elif cfg.heading_style == "left_border":
-            _add_left_border(para, cfg.heading_color)
+            border_color = cfg.rule_color or cfg.heading_color
+            _add_left_border(para, border_color)
+        elif cfg.heading_style in ("rule", "color_rule"):
+            border_color = cfg.rule_color or cfg.heading_color
+            sz = 16 if cfg.heading_style == "color_rule" else 8
+            _add_bottom_border(para, border_color, sz)
 
     # ── Utilities ─────────────────────────────────────────────────────
 
@@ -422,6 +436,22 @@ def _add_left_border(para, rgb: tuple) -> None:
     left.set(qn("w:color"), hex_color)
     pBdr.append(left)
     pPr.append(pBdr)
+
+
+def _add_bottom_border(para, rgb: tuple, sz: int = 8) -> None:
+    """Add a bottom border to a paragraph (rule/color_rule heading styles)."""
+    pPr = para._p.get_or_add_pPr()
+    pBdr = pPr.find(qn("w:pBdr"))
+    if pBdr is None:
+        pBdr = OxmlElement("w:pBdr")
+        pPr.append(pBdr)
+    bottom = OxmlElement("w:bottom")
+    hex_color = "{:02X}{:02X}{:02X}".format(*rgb)
+    bottom.set(qn("w:val"), "single")
+    bottom.set(qn("w:sz"), str(sz))
+    bottom.set(qn("w:space"), "1")
+    bottom.set(qn("w:color"), hex_color)
+    pBdr.append(bottom)
 
 
 def _clear_para(para) -> None:

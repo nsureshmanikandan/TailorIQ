@@ -19,6 +19,8 @@ TEMPLATE_REGISTRY: dict[str, TemplateConfig] = {
         name_size=22.0,
         name_align="center",
         contact_align="center",
+        header_rule_color=(0, 0, 0),
+        header_rule_sz=16,
     ),
     "microsoft_modern": TemplateConfig(
         id="microsoft_modern",
@@ -139,6 +141,8 @@ TEMPLATE_REGISTRY: dict[str, TemplateConfig] = {
         name_align="left",
         designation_color=(0, 119, 181),
         contact_align="left",
+        header_rule_color=(0, 119, 181),
+        header_rule_sz=24,
     ),
     "harvard_classic": TemplateConfig(
         id="harvard_classic",
@@ -152,6 +156,8 @@ TEMPLATE_REGISTRY: dict[str, TemplateConfig] = {
         name_align="center",
         contact_align="center",
         serif_font=True,
+        header_rule_color=(0, 0, 0),
+        header_rule_sz=12,
     ),
     "compact_dense": TemplateConfig(
         id="compact_dense",
