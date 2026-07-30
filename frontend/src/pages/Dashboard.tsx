@@ -31,10 +31,7 @@ export default function Dashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <div>
-              <h1 className="text-base font-bold text-white tracking-tight leading-none">TailorIQ</h1>
-              <p className="text-xs text-slate-400 leading-tight mt-0.5 hidden sm:block">Tailor Your Resume with AI</p>
-            </div>
+            <h1 className="text-xl font-bold text-white tracking-tight">TailorIQ</h1>
           </div>
           <div className="flex items-center gap-4">
             <span className="hidden sm:inline text-sm text-slate-400">{userEmail}</span>
