@@ -30,7 +30,7 @@ export default function JDInput() {
     <div className="flex flex-col h-full">
       {/* Header row: label + action button */}
       <div className="flex items-center justify-between mb-3" style={{ minHeight: '28px' }}>
-        <h3 className="section-label" style={{ marginBottom: 0 }}>Job Description</h3>
+        <h3 className="section-label" style={{ marginBottom: 0, color: '#2dd4bf' }}>Job Description</h3>
         {mode === 'text' ? (
           <button onClick={handleSubmitText} disabled={loading} className="btn-secondary text-sm">
             {loading ? 'Saving...' : saved ? 'Saved ✓' : 'Save JD'}
@@ -42,13 +42,13 @@ export default function JDInput() {
         )}
       </div>
 
-      {/* Tab switcher — dark */}
-      <div className="flex gap-1 mb-3 p-1 rounded-lg w-fit" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}>
+      {/* Tab switcher — teal */}
+      <div className="flex gap-1 mb-3 p-1 rounded-lg w-fit" style={{ background: 'rgba(20,184,166,0.08)', border: '1px solid rgba(20,184,166,0.2)' }}>
         {([['text', 'Paste Text'], ['url', 'From URL']] as const).map(([m, label]) => (
           <button key={m} onClick={() => { setMode(m); setSaved(false) }}
             className="text-sm px-4 py-1.5 rounded-md font-medium transition-all"
             style={mode === m
-              ? { background: '#6366f1', color: '#fff' }
+              ? { background: '#14b8a6', color: '#fff' }
               : { color: '#64748b' }}>
             {label}
           </button>
@@ -65,7 +65,11 @@ export default function JDInput() {
             onChange={(e) => { setText(e.target.value); setSaved(false) }}
             placeholder="Paste the job description here..."
             className="input-field text-sm resize-none flex-1 min-h-0"
-            style={{ paddingRight: '5.5rem' }}
+            style={{
+              paddingRight: '5.5rem',
+              background: 'rgba(20,184,166,0.06)',
+              borderColor: 'rgba(20,184,166,0.3)',
+            }}
             maxLength={50000}
           />
         </div>
@@ -77,6 +81,7 @@ export default function JDInput() {
             onChange={(e) => { setUrl(e.target.value); setSaved(false) }}
             placeholder="https://example.com/job/12345"
             className="input-field text-sm"
+            style={{ background: 'rgba(20,184,166,0.06)', borderColor: 'rgba(20,184,166,0.3)' }}
           />
         </div>
       )}

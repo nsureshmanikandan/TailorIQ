@@ -71,9 +71,9 @@ export default function ResumeUpload() {
         <div
           onClick={() => fileRef.current?.click()}
           className="rounded-xl cursor-pointer transition-all flex-1 flex flex-col items-center justify-center"
-          style={{ border: '2px dashed rgba(99,102,241,0.25)', background: 'rgba(99,102,241,0.03)', minHeight: '180px' }}
-          onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(99,102,241,0.5)'; (e.currentTarget as HTMLDivElement).style.background = 'rgba(99,102,241,0.07)' }}
-          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(99,102,241,0.25)'; (e.currentTarget as HTMLDivElement).style.background = 'rgba(99,102,241,0.03)' }}
+          style={{ border: '2px dashed rgba(99,102,241,0.45)', background: 'rgba(99,102,241,0.08)', minHeight: '180px' }}
+          onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(99,102,241,0.7)'; (e.currentTarget as HTMLDivElement).style.background = 'rgba(99,102,241,0.14)' }}
+          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(99,102,241,0.45)'; (e.currentTarget as HTMLDivElement).style.background = 'rgba(99,102,241,0.08)' }}
         >
           <input ref={fileRef} type="file" accept=".pdf,.docx" onChange={handleFile} className="hidden" />
           {fileName ? (
