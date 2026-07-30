@@ -37,9 +37,22 @@ export default function ResumeUpload() {
     finally { setUploading(false); setPhase('idle') }
   }
 
+  const pills = ['Match Scoring', 'Gap Analysis', 'Keyword Boost', 'Cover Letter', 'Interview Prep']
+
   return (
     <div>
-      <h3 className="section-label">Resume</h3>
+      <div className="flex items-center flex-wrap gap-2 mb-3">
+        <h3 className="section-label mb-0" style={{ marginBottom: 0 }}>Resume</h3>
+        <div className="flex flex-wrap gap-1.5">
+          {pills.map((f) => (
+            <span key={f} className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
+              <span className="w-1.5 h-1.5 rounded-full inline-block flex-shrink-0" style={{ background: '#6366f1' }} />
+              {f}
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* Tab switcher — dark */}
       <div className="flex gap-1 mb-3 p-1 rounded-lg w-fit" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}>

@@ -13,8 +13,6 @@ import DownloadActions from '../components/dashboard/DownloadActions'
 import AnalyzeButton from '../components/upload/AnalyzeButton'
 import LoadingState from '../components/common/LoadingState'
 
-const FEATURE_PILLS = ['Match Scoring', 'Gap Analysis', 'Keyword Boost', 'Cover Letter', 'Interview Prep']
-
 export default function Dashboard() {
   const { userEmail, logout } = useAuthStore()
   const { phase, result, selectedTemplate } = useAnalysisStore()
@@ -59,20 +57,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* Feature pills strip */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-8">
-        <div className="flex flex-wrap gap-2">
-          {FEATURE_PILLS.map((f) => (
-            <span key={f} className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
-              <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: '#6366f1' }} />
-              {f}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 pb-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 space-y-4 pb-12">
 
         {/* Input Section */}
         <section className="rounded-2xl p-6" style={{ background: 'rgba(15,23,41,0.9)', border: '1px solid rgba(255,255,255,0.07)' }}>
