@@ -135,23 +135,23 @@ class PipelineOrchestrator:
             )
             await self._save_phase_2(run_id, pass1_score, gap_report, ats_report)
 
-            # ═══ Phase 3: Tailor → Verify → Re-score (sequential) ═══
+            # ═══ Phase 3: Tailor resume ═══
             logger.info("Pipeline %s: Starting Phase 3 (tailoring)", run_id)
             await self._update_status(run_id, "running", phase="phase_3")
-            tailored_resume, verification_report, pass2_score = await self._phase_3(
-                parsed_resume, parsed_jd, gap_report, resume.raw_text, semantic_map
+            tailored_resume = await self._phase_3(
+                parsed_resume, parsed_jd, gap_report, resume.raw_text
             )
-            # Tailoring should only improve alignment — floor pass2 to pass1 level
+            await self._save_tailored_resume(run_id, tailored_resume)
+
+            # ═══ Phase 4: Verify + Rescore + Cover letter + Interview prep (all parallel) ═══
+            logger.info("Pipeline %s: Starting Phase 4 (verify/rescore/cover/interview)", run_id)
+            await self._update_status(run_id, "running", phase="phase_4")
+            verification_report, pass2_score, cover_letter, interview_guide = await self._phase_4(
+                parsed_resume, parsed_jd, tailored_resume, gap_report, resume.raw_text, semantic_map
+            )
             if pass2_score and pass1_score:
                 pass2_score = self._floor_pass2_score(pass2_score, pass1_score)
-            await self._save_phase_3(run_id, tailored_resume, verification_report, pass2_score)
-
-            # ═══ Phase 4: Cover letter + Interview prep (parallel) ═══
-            logger.info("Pipeline %s: Starting Phase 4 (cover letter/interview)", run_id)
-            await self._update_status(run_id, "running", phase="phase_4")
-            cover_letter, interview_guide = await self._phase_4(
-                parsed_resume, parsed_jd, tailored_resume, gap_report
-            )
+            await self._save_phase_3_rest(run_id, verification_report, pass2_score)
             await self._save_phase_4(run_id, cover_letter, interview_guide)
 
             # ═══ Phase 5: Package generation ═══
@@ -256,9 +256,8 @@ class PipelineOrchestrator:
 
         return pass1_score, gap_report, ats_report
 
-    async def _phase_3(self, parsed_resume, parsed_jd, gap_report, source_text, semantic_map):
-        """Phase 3: Tailor → Verify → Re-score (sequential)."""
-        # Step 1: Tailor resume
+    async def _phase_3(self, parsed_resume, parsed_jd, gap_report, source_text):
+        """Phase 3: Tailor resume only. Verification and rescoring run in phase 4 for parallelism."""
         tailoring_input = ResumeTailoringInput(
             parsed_resume=parsed_resume,
             parsed_jd=parsed_jd,
@@ -271,41 +270,7 @@ class PipelineOrchestrator:
         if isinstance(tailored_resume, Exception):
             raise PipelineError("phase_3", f"Resume tailoring failed: {tailored_resume}")
         self._accumulate_tokens(self._resume_tailor)
-
-        # Step 2: Verify claims
-        verification_input = ClaimVerificationInput(
-            tailored_resume=tailored_resume,
-            original_resume=parsed_resume,
-            source_text=source_text,
-        )
-        verification_report = await self._safe_execute(
-            self._claim_verifier, verification_input, "claim_verification"
-        )
-        if isinstance(verification_report, Exception):
-            logger.warning("Claim verification failed (non-critical): %s", verification_report)
-            verification_report = None
-        else:
-            self._accumulate_tokens(self._claim_verifier)
-
-        # Step 3: Re-score with tailored resume
-        # Reset scorer tokens for pass 2
-        self._match_scorer.reset_token_counters()
-        scoring_input = MatchScoringInput(
-            parsed_resume=parsed_resume,  # Keep original parsed for scoring context
-            parsed_jd=parsed_jd,
-            semantic_map=semantic_map,
-        )
-        pass2_score = await self._safe_execute(
-            self._match_scorer, scoring_input, "match_scoring_pass2"
-        )
-        if isinstance(pass2_score, Exception):
-            # Non-critical, pass 2 failure shouldn't block the pipeline
-            logger.warning("Match scoring pass 2 failed (non-critical): %s", pass2_score)
-            pass2_score = None
-        else:
-            self._accumulate_tokens(self._match_scorer)
-
-        return tailored_resume, verification_report, pass2_score
+        return tailored_resume
 
     def _floor_pass2_score(self, pass2_score, pass1_score):
         """Ensure every pass2 category score is >= the matching pass1 score.
@@ -351,8 +316,25 @@ class PipelineOrchestrator:
 
         return pass2_score
 
-    async def _phase_4(self, parsed_resume, parsed_jd, tailored_resume, gap_report):
-        """Phase 4: Cover letter + Interview prep in parallel."""
+    async def _phase_4(
+        self, parsed_resume, parsed_jd, tailored_resume, gap_report, source_text, semantic_map
+    ):
+        """Phase 4: Claim verification + rescore + cover letter + interview prep (all parallel).
+
+        ClaimVerification and MatchScoring pass2 moved here from phase 3 because they can run
+        concurrently with CoverLetter and InterviewPrep — none of the four depend on each other.
+        """
+        verification_input = ClaimVerificationInput(
+            tailored_resume=tailored_resume,
+            original_resume=parsed_resume,
+            source_text=source_text,
+        )
+        self._match_scorer.reset_token_counters()
+        scoring_input = MatchScoringInput(
+            parsed_resume=parsed_resume,
+            parsed_jd=parsed_jd,
+            semantic_map=semantic_map,
+        )
         cover_input = CoverLetterInput(
             parsed_resume=parsed_resume,
             parsed_jd=parsed_jd,
@@ -365,13 +347,26 @@ class PipelineOrchestrator:
         )
 
         results = await asyncio.gather(
+            self._safe_execute(self._claim_verifier, verification_input, "claim_verification"),
+            self._safe_execute(self._match_scorer, scoring_input, "match_scoring_pass2"),
             self._safe_execute(self._cover_letter_gen, cover_input, "cover_letter"),
             self._safe_execute(self._interview_prep, interview_input, "interview_prep"),
             return_exceptions=True,
         )
 
-        cover_letter = results[0]
-        interview_guide = results[1]
+        verification_report, pass2_score, cover_letter, interview_guide = results
+
+        if isinstance(verification_report, Exception):
+            logger.warning("Claim verification failed (non-critical): %s", verification_report)
+            verification_report = None
+        else:
+            self._accumulate_tokens(self._claim_verifier)
+
+        if isinstance(pass2_score, Exception):
+            logger.warning("Match scoring pass 2 failed (non-critical): %s", pass2_score)
+            pass2_score = None
+        else:
+            self._accumulate_tokens(self._match_scorer)
 
         if isinstance(cover_letter, Exception):
             logger.warning("Cover letter generation failed (non-critical): %s", cover_letter)
@@ -385,7 +380,7 @@ class PipelineOrchestrator:
         else:
             self._accumulate_tokens(self._interview_prep)
 
-        return cover_letter, interview_guide
+        return verification_report, pass2_score, cover_letter, interview_guide
 
     async def _phase_5(self, tailored_resume, cover_letter, interview_guide, candidate_name):
         """Phase 5: Generate document package."""
@@ -497,9 +492,16 @@ class PipelineOrchestrator:
         )
         await self._db.commit()
 
-    async def _save_phase_3(self, run_id, tailored_resume, verification_report, pass2_score) -> None:
+    async def _save_tailored_resume(self, run_id, tailored_resume) -> None:
+        await self._db.execute(
+            update(MatchResult).where(MatchResult.run_id == run_id).values(
+                tailored_resume=tailored_resume.model_dump() if tailored_resume else None,
+            )
+        )
+        await self._db.commit()
+
+    async def _save_phase_3_rest(self, run_id, verification_report, pass2_score) -> None:
         values: dict[str, Any] = {
-            "tailored_resume": tailored_resume.model_dump() if tailored_resume else None,
             "verification_report": verification_report.model_dump() if verification_report else None,
         }
         if pass2_score:

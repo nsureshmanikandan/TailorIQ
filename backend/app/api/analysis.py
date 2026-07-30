@@ -282,7 +282,6 @@ async def download_cv_template(
 ) -> StreamingResponse:
     """Download the tailored CV as a DOCX in the selected template style."""
     from app.agents.cv_templates import TEMPLATE_REGISTRY, generate_cv_docx
-    from app.schemas.resume_parsed import ParsedResume
     from app.schemas.tailored import TailoredResume
 
     if template not in TEMPLATE_REGISTRY:
@@ -314,25 +313,25 @@ async def download_cv_template(
             detail="Tailored resume not available for this run.",
         )
 
-    # Extract candidate info from parsed_resume
+    # Extract candidate info from the raw parsed_resume JSON.
+    # The LLM returns contact_info as a nested dict and current_title at the top level;
+    # reading the raw dict avoids schema field-mapping losses from ParsedResume.model_validate().
     candidate_name = "Candidate"
     contact_info: dict = {}
     if match_result.parsed_resume:
         try:
-            parsed = ParsedResume.model_validate(match_result.parsed_resume)
-            if parsed.candidate_name:
-                candidate_name = parsed.candidate_name
-            ci = parsed.contact_info
-            if ci:
-                contact_info = {
-                    "location": getattr(ci, "location", "") or "",
-                    "email": getattr(ci, "email", "") or "",
-                    "phone": getattr(ci, "phone", "") or "",
-                    "linkedin": getattr(ci, "linkedin_url", "") or "",
-                    "designation": getattr(parsed, "current_title", "") or "",
-                }
+            raw = match_result.parsed_resume  # already a dict stored as JSON
+            candidate_name = raw.get("candidate_name") or "Candidate"
+            raw_ci = raw.get("contact_info") or {}
+            contact_info = {
+                "location": raw_ci.get("location") or raw.get("location") or "",
+                "email": raw_ci.get("email") or raw.get("email") or "",
+                "phone": raw_ci.get("phone") or raw.get("phone") or "",
+                "linkedin": raw_ci.get("linkedin_url") or raw.get("linkedin_url") or "",
+                "designation": raw.get("current_title") or "",
+            }
         except Exception:
-            logger.warning("Could not parse parsed_resume for run %s — using defaults", run_id)
+            logger.warning("Could not extract contact info for run %s — using defaults", run_id)
 
     try:
         tailored = TailoredResume.model_validate(match_result.tailored_resume)

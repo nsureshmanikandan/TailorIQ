@@ -228,7 +228,7 @@ class CVDocxRenderer:
                     p = cell.add_paragraph()
                 r = p.add_run(stripped)
                 r.font.name = cfg.font_name
-                r.font.size = Pt(10)
+                r.font.size = Pt(10)   # CSS 12px → 10pt
 
     # ── Header helpers ────────────────────────────────────────────────
 
@@ -251,22 +251,22 @@ class CVDocxRenderer:
         r.bold = True
         r.font.color.rgb = RGBColor(*cfg.header_text_color)
 
-        designation = contact_info.get("designation", "")
-        if designation:
-            p2 = cell.add_paragraph()
-            dr = p2.add_run(designation)
-            dr.font.name = cfg.font_name
-            dr.font.size = Pt(12)
-            desig_color = cfg.designation_color or (200, 220, 255)
-            dr.font.color.rgb = RGBColor(*desig_color)
-
         contact_line = _build_contact_line(contact_info)
         if contact_line:
-            p3 = cell.add_paragraph()
-            cr = p3.add_run(contact_line)
+            p2 = cell.add_paragraph()
+            cr = p2.add_run(contact_line)
             cr.font.name = cfg.font_name
-            cr.font.size = Pt(10)
+            cr.font.size = Pt(9)   # CSS 11px → 9pt
             cr.font.color.rgb = RGBColor(180, 200, 220)
+
+        designation = contact_info.get("designation", "")
+        if designation:
+            p3 = cell.add_paragraph()
+            dr = p3.add_run(designation)
+            dr.font.name = cfg.font_name
+            dr.font.size = Pt(10)  # CSS 13px → 10pt
+            desig_color = cfg.designation_color or (200, 220, 255)
+            dr.font.color.rgb = RGBColor(*desig_color)
 
         doc.add_paragraph()  # spacer after header table
 
@@ -282,25 +282,25 @@ class CVDocxRenderer:
         r.bold = cfg.name_align == "center"
         r.font.color.rgb = RGBColor(*cfg.heading_color)
 
-        designation = contact_info.get("designation", "")
-        if designation:
-            p2 = doc.add_paragraph()
-            p2.alignment = align
-            dr = p2.add_run(designation)
-            dr.font.name = cfg.font_name
-            dr.font.size = Pt(12)
-            dr.bold = True
-            desig_color = cfg.designation_color or cfg.heading_color
-            dr.font.color.rgb = RGBColor(*desig_color)
-
+        # Contact before designation (matches CSS preview order)
         contact_line = _build_contact_line(contact_info)
         if contact_line:
+            p2 = doc.add_paragraph()
+            p2.alignment = align
+            cr = p2.add_run(contact_line)
+            cr.font.name = cfg.font_name
+            cr.font.size = Pt(9)   # CSS 11px → 9pt
+            cr.font.color.rgb = RGBColor(90, 90, 90)
+
+        designation = contact_info.get("designation", "")
+        if designation:
             p3 = doc.add_paragraph()
             p3.alignment = align
-            cr = p3.add_run(contact_line)
-            cr.font.name = cfg.font_name
-            cr.font.size = Pt(10)
-            cr.font.color.rgb = RGBColor(90, 90, 90)
+            dr = p3.add_run(designation)
+            dr.font.name = cfg.font_name
+            dr.font.size = Pt(10)  # CSS 13px → 10pt
+            desig_color = cfg.designation_color or (120, 120, 120)
+            dr.font.color.rgb = RGBColor(*desig_color)
 
         # Bottom border rule under the header block (e.g. ATS Classic, Harvard)
         if cfg.header_rule_color:
@@ -313,8 +313,8 @@ class CVDocxRenderer:
     def _render_body(self, doc, full_text, candidate_name, skip_contact=False):
         cfg = self.cfg
         candidate_upper = candidate_name.upper().replace(" ", "")
-        in_contact = False      # inside CONTACT section (skip when skip_contact=True)
-        in_header_sec = False   # inside HEADER section (always skip — already in doc header)
+        in_contact = False      # inside CONTACT / HEADER section — always skip
+        first_section_seen = False  # skip preamble (name, contact, designation) before first heading
 
         for line in full_text.split("\n"):
             stripped = _SOURCE_CITATION_RE.sub(".", line.strip()).strip()
@@ -327,35 +327,30 @@ class CVDocxRenderer:
             is_hdr = _is_section_heading(stripped, _SECTION_HEADERS)
 
             if is_hdr:
-                if upper == "HEADER":
-                    in_header_sec = True
-                    in_contact = False
-                    continue
-                if upper in {"CONTACT", "CONTACT INFORMATION", "CONTACT DETAILS"}:
+                if upper in {"HEADER", "CONTACT", "CONTACT INFORMATION", "CONTACT DETAILS"}:
                     in_contact = True
-                    in_header_sec = False
                     continue
                 in_contact = False
-                in_header_sec = False
+                first_section_seen = True
                 doc.add_paragraph()  # spacer
                 p = doc.add_paragraph()
                 self._apply_heading_style(p, stripped)
-            elif in_header_sec:
-                continue  # always skip content inside HEADER section
-            elif in_contact and skip_contact:
-                continue
+            elif in_contact:
+                continue  # always skip contact/header section content
+            elif not first_section_seen:
+                continue  # skip preamble lines (contact, designation, etc.) before first section
             else:
                 p = doc.add_paragraph()
                 r = p.add_run(stripped)
                 r.font.name = cfg.font_name
-                r.font.size = Pt(11)
+                r.font.size = Pt(10)   # CSS 12px → 10pt
 
     def _apply_heading_style(self, para, heading_text):
         cfg = self.cfg
         text = heading_text.upper() if cfg.heading_uppercase else heading_text
         r = para.add_run(text)
         r.font.name = cfg.font_name
-        r.font.size = Pt(12)
+        r.font.size = Pt(10)   # CSS 12px → 10pt
         r.bold = True
         r.font.color.rgb = RGBColor(*cfg.heading_color)
 
