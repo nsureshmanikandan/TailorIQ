@@ -178,11 +178,21 @@ export default function TailoredResumePreview({ resume, parsedResume, selectedTe
       {/* ── Styled CV Preview ── */}
       <div className={`cv-preview tmpl-${selectedTemplate} border border-gray-200 shadow-sm`}>
         {isTwoCol ? (
-          // Two-column layout — always uses sections
+          // Two-column layout
           <>
             <div className="cv-sidebar">
               <div className="cv-name">{candidateName}</div>
               {designation && <div className="cv-designation">{designation}</div>}
+
+              {/* Contact info in sidebar */}
+              {contact && (
+                <div className="cv-sidebar-contact">
+                  {contact.split('  ·  ').map((item, i) => (
+                    <div key={i} className="cv-sidebar-contact-item">{item}</div>
+                  ))}
+                </div>
+              )}
+
               {sidebarSections.map((sec, i) => (
                 <div key={`${secName(sec)}-${i}`} className="cv-section">
                   <div className="cv-section-heading">{secName(sec)}</div>
@@ -191,9 +201,14 @@ export default function TailoredResumePreview({ resume, parsedResume, selectedTe
               ))}
             </div>
             <div className="cv-main-col">
-              {mainSections.map((sec, i) => (
-                <CVSection key={`${secName(sec)}-${i}`} section={sec} />
-              ))}
+              {mainSections.length >= 1
+                ? mainSections.map((sec, i) => (
+                    <CVSection key={`${secName(sec)}-${i}`} section={sec} />
+                  ))
+                : resume.full_text
+                  ? <FullTextRenderer fullText={resume.full_text} candidateName={candidateName} />
+                  : null
+              }
             </div>
           </>
         ) : (

@@ -65,20 +65,35 @@
   color: #1a3a5c; border-bottom: 1.5px solid #1a3a5c;
 }
 
-/* ── 4. Executive Dark ── */
-.tmpl-executive_dark .cv-preview { display: flex; min-height: 300px; }
-.tmpl-executive_dark .cv-sidebar {
-  width: 200px; background: #1a1a2e; padding: 20px 14px;
-  flex-shrink: 0; color: #c0c8df;
+/* ── Shared sidebar contact block (both two-column templates) ── */
+.cv-sidebar-contact {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.15);
 }
-.tmpl-executive_dark .cv-sidebar .cv-name        { color: #fff; font-size: 14px; }
-.tmpl-executive_dark .cv-sidebar .cv-designation { color: #a0a8c0; font-size: 10px; font-style: italic; }
+.cv-sidebar-contact-item {
+  font-size: 9.5px;
+  line-height: 1.7;
+  word-break: break-all;
+  opacity: 0.85;
+}
+
+/* ── 4. Executive Dark ── */
+.tmpl-executive_dark .cv-preview { display: flex; min-height: 500px; }
+.tmpl-executive_dark .cv-sidebar {
+  width: 230px; background: #1a1a2e; padding: 24px 16px;
+  flex-shrink: 0; color: #c0c8df; display: flex; flex-direction: column;
+}
+.tmpl-executive_dark .cv-sidebar .cv-name        { color: #fff; font-size: 15px; line-height: 1.3; }
+.tmpl-executive_dark .cv-sidebar .cv-designation { color: #a0a8c0; font-size: 10px; font-style: italic; margin-top: 4px; }
+.tmpl-executive_dark .cv-sidebar-contact         { color: #8090b0; border-color: #2d2d4e; }
 .tmpl-executive_dark .cv-sidebar .cv-section-heading {
   color: #6366f1; font-size: 9px; border-bottom: 1px solid #2d2d4e;
-  margin-top: 16px;
+  margin-top: 18px; padding-bottom: 4px;
 }
-.tmpl-executive_dark .cv-sidebar .cv-section-body { font-size: 10px; color: #c0c8df; }
-.tmpl-executive_dark .cv-main-col { flex: 1; padding: 20px 18px; }
+.tmpl-executive_dark .cv-sidebar .cv-section-body { font-size: 10px; color: #c0c8df; line-height: 1.8; }
+.tmpl-executive_dark .cv-main-col { flex: 1; padding: 24px 20px; background: #fff; }
+.tmpl-executive_dark .cv-main-col .cv-section { margin-top: 18px; }
 .tmpl-executive_dark .cv-main-col .cv-section-heading {
   color: #1a1a2e; border-left: 3px solid #6366f1; padding-left: 8px; border-bottom: none;
 }
@@ -178,20 +193,24 @@
 .tmpl-compact_dense .cv-section-body { font-size: 11px; line-height: 1.5; }
 
 /* ── 13. Two Column Split ── */
-.tmpl-two_column_split .cv-preview  { display: flex; min-height: 300px; }
+.tmpl-two_column_split .cv-preview  { display: flex; min-height: 500px; }
 .tmpl-two_column_split .cv-sidebar  {
-  width: 210px; background: #1e3a5f; padding: 20px 14px;
-  flex-shrink: 0; color: #bcd4ea;
+  width: 240px; background: #1e3a5f; padding: 24px 16px;
+  flex-shrink: 0; color: #bcd4ea; display: flex; flex-direction: column;
 }
-.tmpl-two_column_split .cv-sidebar .cv-name        { color: #fff; font-size: 15px; }
-.tmpl-two_column_split .cv-sidebar .cv-designation { color: #90b8d8; font-size: 10px; margin-top: 4px; }
+.tmpl-two_column_split .cv-sidebar .cv-name        { color: #fff; font-size: 16px; line-height: 1.3; font-weight: 700; }
+.tmpl-two_column_split .cv-sidebar .cv-designation { color: #90b8d8; font-size: 10px; margin-top: 4px; font-style: italic; }
+.tmpl-two_column_split .cv-sidebar-contact         { color: #7da8c8; border-color: #2c5282; }
 .tmpl-two_column_split .cv-sidebar .cv-section-heading {
-  color: #7dd3fc; font-size: 9px; border-bottom: 1px solid #2c5282; margin-top: 14px; border-top: none;
+  color: #7dd3fc; font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px;
+  border-bottom: 1px solid #2c5282; margin-top: 16px; padding-bottom: 4px;
 }
-.tmpl-two_column_split .cv-sidebar .cv-section-body { font-size: 10px; color: #bcd4ea; }
-.tmpl-two_column_split .cv-main-col { flex: 1; padding: 20px 18px; }
+.tmpl-two_column_split .cv-sidebar .cv-section-body { font-size: 10px; color: #bcd4ea; line-height: 1.8; }
+.tmpl-two_column_split .cv-main-col { flex: 1; padding: 24px 22px; background: #fff; }
+.tmpl-two_column_split .cv-main-col .cv-section { margin-top: 18px; }
+.tmpl-two_column_split .cv-main-col .cv-section:first-child { margin-top: 0; }
 .tmpl-two_column_split .cv-main-col .cv-section-heading {
-  color: #1e3a5f; border-bottom: 2px solid #1e3a5f;
+  color: #1e3a5f; border-bottom: 2px solid #1e3a5f; padding-bottom: 3px; margin-bottom: 6px;
 }
 
 /* ── 14. Green Professional ── */
