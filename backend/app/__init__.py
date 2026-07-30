@@ -1,0 +1,1 @@
+"""ResumeJDMatch AI backend application."""

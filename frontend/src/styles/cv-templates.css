@@ -1,0 +1,224 @@
+/* ============================================================
+   CV Template Styles — 15 professional templates
+   Each .tmpl-X class styles: .cv-name, .cv-designation,
+   .cv-contact, .cv-section-heading, .cv-section-body,
+   .cv-preview-header, .cv-preview (container)
+   ============================================================ */
+
+.cv-preview {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cv-preview-header { padding: 20px 28px 16px; }
+.cv-preview-body   { padding: 8px 28px 20px; }
+.cv-name           { font-size: 22px; font-weight: 700; line-height: 1.2; }
+.cv-designation    { font-size: 13px; font-weight: 600; margin-top: 3px; }
+.cv-contact        { font-size: 11px; margin-top: 4px; }
+.cv-section        { margin-top: 16px; }
+.cv-section-heading {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.6px; padding-bottom: 3px; margin-bottom: 5px;
+}
+.cv-section-body   { font-size: 12px; white-space: pre-wrap; line-height: 1.7; }
+.cv-keyword-badge  {
+  display: inline-block; font-size: 10px;
+  background: #fef3c7; color: #92400e;
+  border-radius: 4px; padding: 1px 6px; margin: 2px 2px 0 0;
+}
+
+/* ── 1. ATS Classic ── */
+.tmpl-ats_classic .cv-preview-header { text-align: center; border-bottom: 2px solid #000; }
+.tmpl-ats_classic .cv-name           { color: #000; letter-spacing: 1px; }
+.tmpl-ats_classic .cv-designation    { color: #444; }
+.tmpl-ats_classic .cv-contact        { color: #666; }
+.tmpl-ats_classic .cv-section-heading {
+  color: #000; border-bottom: 1px solid #000;
+}
+
+/* ── 2. Microsoft Modern ── */
+.tmpl-microsoft_modern .cv-preview-header {
+  background: #2b579a; padding: 22px 28px 18px;
+}
+.tmpl-microsoft_modern .cv-name        { color: #fff; font-size: 24px; }
+.tmpl-microsoft_modern .cv-designation { color: #c9d9f0; }
+.tmpl-microsoft_modern .cv-contact     { color: #a8c4e8; }
+.tmpl-microsoft_modern .cv-section-heading {
+  color: #2b579a; border-bottom: 2px solid #2b579a;
+}
+
+/* ── 3. Corporate Blue ── */
+.tmpl-corporate_blue .cv-preview-header { text-align: center; }
+.tmpl-corporate_blue .cv-name          { color: #1a3a5c; text-align: center; }
+.tmpl-corporate_blue .cv-designation   { color: #1a3a5c; text-align: center; }
+.tmpl-corporate_blue .cv-contact       { color: #555; text-align: center; }
+.tmpl-corporate_blue .cv-divider {
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #1a3a5c 20%, #4a90d9 60%, transparent);
+  margin: 10px 0;
+}
+.tmpl-corporate_blue .cv-section-heading {
+  color: #1a3a5c; border-bottom: 1.5px solid #1a3a5c;
+}
+
+/* ── 4. Executive Dark ── */
+.tmpl-executive_dark .cv-preview { display: flex; min-height: 300px; }
+.tmpl-executive_dark .cv-sidebar {
+  width: 200px; background: #1a1a2e; padding: 20px 14px;
+  flex-shrink: 0; color: #c0c8df;
+}
+.tmpl-executive_dark .cv-sidebar .cv-name        { color: #fff; font-size: 14px; }
+.tmpl-executive_dark .cv-sidebar .cv-designation { color: #a0a8c0; font-size: 10px; font-style: italic; }
+.tmpl-executive_dark .cv-sidebar .cv-section-heading {
+  color: #6366f1; font-size: 9px; border-bottom: 1px solid #2d2d4e;
+  margin-top: 16px;
+}
+.tmpl-executive_dark .cv-sidebar .cv-section-body { font-size: 10px; color: #c0c8df; }
+.tmpl-executive_dark .cv-main-col { flex: 1; padding: 20px 18px; }
+.tmpl-executive_dark .cv-main-col .cv-section-heading {
+  color: #1a1a2e; border-left: 3px solid #6366f1; padding-left: 8px; border-bottom: none;
+}
+
+/* ── 5. Clean Minimal ── */
+.tmpl-clean_minimal .cv-preview-header {}
+.tmpl-clean_minimal .cv-name          { font-weight: 300; letter-spacing: 3px; color: #111; text-transform: uppercase; font-size: 26px; }
+.tmpl-clean_minimal .cv-designation   { color: #888; font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase; font-size: 11px; }
+.tmpl-clean_minimal .cv-contact       { color: #aaa; font-size: 11px; }
+.tmpl-clean_minimal .cv-section-heading {
+  color: #999; font-size: 9px; letter-spacing: 2px; border-bottom: 0.5px solid #ddd; font-weight: 600;
+}
+.tmpl-clean_minimal .cv-section-body  { color: #444; }
+
+/* ── 6. Charcoal Gold ── */
+.tmpl-charcoal_gold .cv-preview-header {
+  background: #1e2a3a; padding: 22px 28px 18px;
+  border-bottom: 4px solid #c9a84c;
+}
+.tmpl-charcoal_gold .cv-name        { color: #fff; }
+.tmpl-charcoal_gold .cv-designation { color: #c9a84c; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+.tmpl-charcoal_gold .cv-contact     { color: #94a3b8; }
+.tmpl-charcoal_gold .cv-section-heading {
+  color: #1e2a3a; border-left: 3px solid #c9a84c; padding-left: 8px; border-bottom: none;
+}
+
+/* ── 7. Elegant Serif ── */
+.tmpl-elegant_serif .cv-preview     { background: #fdfcf8; font-family: Georgia, serif; }
+.tmpl-elegant_serif .cv-preview-header { text-align: center; }
+.tmpl-elegant_serif .cv-name        { color: #2c1810; font-family: Georgia, serif; letter-spacing: 1px; }
+.tmpl-elegant_serif .cv-designation { color: #7a5c47; font-style: italic; font-family: Georgia, serif; }
+.tmpl-elegant_serif .cv-contact     { color: #9a7a65; font-family: Georgia, serif; }
+.tmpl-elegant_serif .cv-orn         { text-align: center; color: #c4956a; font-size: 16px; margin: 6px 0; }
+.tmpl-elegant_serif .cv-section-heading {
+  color: #2c1810; font-family: Georgia, serif; text-align: center;
+  border-bottom: 1px solid #c4a88a; font-variant: small-caps; letter-spacing: 1.5px;
+}
+.tmpl-elegant_serif .cv-section-body { font-family: Georgia, serif; color: #333; }
+
+/* ── 8. Tech Pro ── */
+.tmpl-tech_pro .cv-preview          { background: #0d1117; color: #c9d1d9; font-family: 'Courier New', monospace; }
+.tmpl-tech_pro .cv-preview-header   { padding: 20px 28px 14px; }
+.tmpl-tech_pro .cv-prompt           { color: #57c757; font-size: 11px; margin-bottom: 6px; }
+.tmpl-tech_pro .cv-name             { color: #e6edf3; letter-spacing: 1px; font-family: 'Courier New', monospace; }
+.tmpl-tech_pro .cv-designation      { color: #58a6ff; font-family: 'Courier New', monospace; }
+.tmpl-tech_pro .cv-contact          { color: #8b949e; font-family: 'Courier New', monospace; }
+.tmpl-tech_pro .cv-section-heading {
+  color: #79c0ff; border-bottom: 1px solid #30363d; font-family: 'Courier New', monospace;
+}
+.tmpl-tech_pro .cv-section-heading::before { content: '# '; color: #8b949e; }
+.tmpl-tech_pro .cv-section-body     { color: #c9d1d9; font-family: 'Courier New', monospace; font-size: 11px; }
+
+/* ── 9. Creative Teal ── */
+.tmpl-creative_teal .cv-preview-header {
+  background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); padding: 22px 28px 18px;
+}
+.tmpl-creative_teal .cv-name        { color: #fff; }
+.tmpl-creative_teal .cv-designation { color: #ccfbf1; font-weight: 500; }
+.tmpl-creative_teal .cv-contact     { color: #99f6e4; }
+.tmpl-creative_teal .cv-section-heading {
+  color: #0d9488; border-bottom: 2px solid #99f6e4;
+}
+
+/* ── 10. LinkedIn Style ── */
+.tmpl-linkedin_style .cv-preview    { background: #f3f2ef; }
+.tmpl-linkedin_style .cv-preview-header {
+  background: #fff; border-bottom: 3px solid #0077b5; padding: 18px 24px 14px;
+}
+.tmpl-linkedin_style .cv-name       { color: #000; }
+.tmpl-linkedin_style .cv-designation { color: #0077b5; }
+.tmpl-linkedin_style .cv-contact    { color: #666; }
+.tmpl-linkedin_style .cv-preview-body { background: #fff; margin: 8px; border-radius: 6px; padding: 12px 20px; }
+.tmpl-linkedin_style .cv-section-heading {
+  color: #000; border-bottom: 1px solid #e0e0e0;
+}
+
+/* ── 11. Harvard Classic ── */
+.tmpl-harvard_classic .cv-preview   { font-family: 'Times New Roman', Georgia, serif; }
+.tmpl-harvard_classic .cv-preview-header { text-align: center; border-bottom: 1.5px solid #000; padding-bottom: 10px; }
+.tmpl-harvard_classic .cv-name      { color: #000; font-family: 'Times New Roman', serif; }
+.tmpl-harvard_classic .cv-designation { color: #000; font-family: 'Times New Roman', serif; }
+.tmpl-harvard_classic .cv-contact   { color: #333; font-family: 'Times New Roman', serif; font-size: 11px; }
+.tmpl-harvard_classic .cv-section-heading {
+  color: #a51c30; border-bottom: 1px solid #a51c30; font-family: 'Times New Roman', serif;
+}
+.tmpl-harvard_classic .cv-section-body { font-family: 'Times New Roman', serif; }
+
+/* ── 12. Compact Dense ── */
+.tmpl-compact_dense .cv-preview     { font-size: 12px; }
+.tmpl-compact_dense .cv-name        { font-size: 16px; color: #000; }
+.tmpl-compact_dense .cv-designation { color: #444; font-size: 11px; }
+.tmpl-compact_dense .cv-contact     { color: #666; font-size: 10px; }
+.tmpl-compact_dense .cv-section     { margin-top: 8px; }
+.tmpl-compact_dense .cv-section-heading {
+  background: #334155; color: #fff; padding: 2px 8px; border-bottom: none; margin-bottom: 4px;
+}
+.tmpl-compact_dense .cv-section-body { font-size: 11px; line-height: 1.5; }
+
+/* ── 13. Two Column Split ── */
+.tmpl-two_column_split .cv-preview  { display: flex; min-height: 300px; }
+.tmpl-two_column_split .cv-sidebar  {
+  width: 210px; background: #1e3a5f; padding: 20px 14px;
+  flex-shrink: 0; color: #bcd4ea;
+}
+.tmpl-two_column_split .cv-sidebar .cv-name        { color: #fff; font-size: 15px; }
+.tmpl-two_column_split .cv-sidebar .cv-designation { color: #90b8d8; font-size: 10px; margin-top: 4px; }
+.tmpl-two_column_split .cv-sidebar .cv-section-heading {
+  color: #7dd3fc; font-size: 9px; border-bottom: 1px solid #2c5282; margin-top: 14px; border-top: none;
+}
+.tmpl-two_column_split .cv-sidebar .cv-section-body { font-size: 10px; color: #bcd4ea; }
+.tmpl-two_column_split .cv-main-col { flex: 1; padding: 20px 18px; }
+.tmpl-two_column_split .cv-main-col .cv-section-heading {
+  color: #1e3a5f; border-bottom: 2px solid #1e3a5f;
+}
+
+/* ── 14. Green Professional ── */
+.tmpl-green_professional .cv-preview-header {}
+.tmpl-green_professional .cv-name        { color: #14532d; }
+.tmpl-green_professional .cv-designation { color: #15803d; }
+.tmpl-green_professional .cv-contact     { color: #555; }
+.tmpl-green_professional .cv-accent-bar {
+  height: 4px; background: linear-gradient(90deg, #16a34a, #86efac 70%, transparent);
+  margin: 8px 0 10px; border-radius: 2px;
+}
+.tmpl-green_professional .cv-section-heading {
+  color: #14532d; border-left: 4px solid #16a34a; padding-left: 8px; border-bottom: none;
+}
+
+/* ── 15. Purple Modern ── */
+.tmpl-purple_modern .cv-preview-header {
+  background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 60%, #a855f7 100%);
+  padding: 22px 28px 18px;
+}
+.tmpl-purple_modern .cv-name        { color: #fff; }
+.tmpl-purple_modern .cv-designation { color: #e9d5ff; font-weight: 500; }
+.tmpl-purple_modern .cv-contact     { color: #c4b5fd; }
+.tmpl-purple_modern .cv-section-heading {
+  color: #6d28d9; border-left: 3px solid #a855f7; padding-left: 8px; border-bottom: none;
+}
+.tmpl-purple_modern .cv-section-heading::before {
+  content: ''; display: inline-block; width: 7px; height: 7px;
+  background: #a855f7; border-radius: 50%; margin-right: 6px; vertical-align: middle;
+}

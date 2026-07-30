@@ -1,0 +1,444 @@
+# Semantic equivalence mappings for resume-JD matching.
+# Groups of terms that should be treated as equivalent during scoring.
+#
+# Structure:
+#   skill_synonyms: Groups of equivalent skill names/abbreviations
+#   title_synonyms: Groups of equivalent job title variations
+#   certification_mappings: Canonical certification names with aliases
+
+skill_synonyms:
+  - group_id: machine_learning
+    canonical: "Machine Learning"
+    terms:
+      - "ML"
+      - "Machine Learning"
+      - "machine-learning"
+      - "Statistical Learning"
+
+  - group_id: artificial_intelligence
+    canonical: "Artificial Intelligence"
+    terms:
+      - "AI"
+      - "Artificial Intelligence"
+      - "artificial-intelligence"
+
+  - group_id: deep_learning
+    canonical: "Deep Learning"
+    terms:
+      - "DL"
+      - "Deep Learning"
+      - "deep-learning"
+      - "Neural Networks"
+
+  - group_id: natural_language_processing
+    canonical: "Natural Language Processing"
+    terms:
+      - "NLP"
+      - "Natural Language Processing"
+      - "natural-language-processing"
+      - "Text Analytics"
+      - "Computational Linguistics"
+
+  - group_id: amazon_web_services
+    canonical: "Amazon Web Services"
+    terms:
+      - "AWS"
+      - "Amazon Web Services"
+      - "Amazon Cloud"
+
+  - group_id: google_cloud_platform
+    canonical: "Google Cloud Platform"
+    terms:
+      - "GCP"
+      - "Google Cloud Platform"
+      - "Google Cloud"
+
+  - group_id: microsoft_azure
+    canonical: "Microsoft Azure"
+    terms:
+      - "Azure"
+      - "Microsoft Azure"
+      - "Azure Cloud"
+
+  - group_id: kubernetes
+    canonical: "Kubernetes"
+    terms:
+      - "K8s"
+      - "Kubernetes"
+      - "k8s"
+
+  - group_id: docker
+    canonical: "Docker"
+    terms:
+      - "Docker"
+      - "Containerization"
+      - "Docker Containers"
+
+  - group_id: ci_cd
+    canonical: "CI/CD"
+    terms:
+      - "CI/CD"
+      - "Continuous Integration"
+      - "Continuous Deployment"
+      - "Continuous Delivery"
+      - "CI"
+      - "CD"
+
+  - group_id: javascript
+    canonical: "JavaScript"
+    terms:
+      - "JS"
+      - "JavaScript"
+      - "ECMAScript"
+      - "ES6"
+      - "ES2015+"
+
+  - group_id: typescript
+    canonical: "TypeScript"
+    terms:
+      - "TS"
+      - "TypeScript"
+
+  - group_id: python
+    canonical: "Python"
+    terms:
+      - "Python"
+      - "Python3"
+      - "Python 3"
+      - "Py"
+
+  - group_id: react
+    canonical: "React"
+    terms:
+      - "React"
+      - "React.js"
+      - "ReactJS"
+
+  - group_id: node_js
+    canonical: "Node.js"
+    terms:
+      - "Node.js"
+      - "NodeJS"
+      - "Node"
+
+  - group_id: postgres
+    canonical: "PostgreSQL"
+    terms:
+      - "PostgreSQL"
+      - "Postgres"
+      - "PG"
+
+  - group_id: mongodb
+    canonical: "MongoDB"
+    terms:
+      - "MongoDB"
+      - "Mongo"
+
+  - group_id: sql
+    canonical: "SQL"
+    terms:
+      - "SQL"
+      - "Structured Query Language"
+
+  - group_id: nosql
+    canonical: "NoSQL"
+    terms:
+      - "NoSQL"
+      - "Non-relational Databases"
+      - "Document Databases"
+
+  - group_id: rest_api
+    canonical: "REST API"
+    terms:
+      - "REST"
+      - "REST API"
+      - "RESTful"
+      - "RESTful API"
+      - "REST APIs"
+
+  - group_id: graphql
+    canonical: "GraphQL"
+    terms:
+      - "GraphQL"
+      - "GQL"
+
+  - group_id: agile
+    canonical: "Agile"
+    terms:
+      - "Agile"
+      - "Agile Methodology"
+      - "Agile Development"
+      - "Scrum"
+      - "Kanban"
+
+  - group_id: devops
+    canonical: "DevOps"
+    terms:
+      - "DevOps"
+      - "Dev Ops"
+      - "Development Operations"
+
+  - group_id: infrastructure_as_code
+    canonical: "Infrastructure as Code"
+    terms:
+      - "IaC"
+      - "Infrastructure as Code"
+      - "Terraform"
+      - "CloudFormation"
+
+  - group_id: microservices
+    canonical: "Microservices"
+    terms:
+      - "Microservices"
+      - "Micro-services"
+      - "Microservice Architecture"
+      - "Service-Oriented Architecture"
+      - "SOA"
+
+  - group_id: object_oriented_programming
+    canonical: "Object-Oriented Programming"
+    terms:
+      - "OOP"
+      - "Object-Oriented Programming"
+      - "Object Oriented"
+
+  - group_id: test_driven_development
+    canonical: "Test-Driven Development"
+    terms:
+      - "TDD"
+      - "Test-Driven Development"
+      - "Test Driven Development"
+
+  - group_id: data_science
+    canonical: "Data Science"
+    terms:
+      - "Data Science"
+      - "DS"
+      - "Data Analytics"
+
+title_synonyms:
+  - group_id: software_engineer
+    canonical: "Software Engineer"
+    terms:
+      - "Software Engineer"
+      - "SDE"
+      - "Software Development Engineer"
+      - "Software Developer"
+      - "Developer"
+      - "Programmer"
+      - "Coder"
+
+  - group_id: senior_software_engineer
+    canonical: "Senior Software Engineer"
+    terms:
+      - "Senior Software Engineer"
+      - "Sr. Software Engineer"
+      - "Sr Software Engineer"
+      - "Senior SDE"
+      - "SDE II"
+      - "SDE 2"
+      - "Senior Developer"
+      - "Sr. Developer"
+
+  - group_id: staff_engineer
+    canonical: "Staff Engineer"
+    terms:
+      - "Staff Engineer"
+      - "Staff Software Engineer"
+      - "SDE III"
+      - "SDE 3"
+      - "Principal Engineer"
+
+  - group_id: frontend_developer
+    canonical: "Frontend Developer"
+    terms:
+      - "Frontend Developer"
+      - "Front-End Developer"
+      - "Front End Developer"
+      - "UI Developer"
+      - "UI Engineer"
+      - "Frontend Engineer"
+
+  - group_id: backend_developer
+    canonical: "Backend Developer"
+    terms:
+      - "Backend Developer"
+      - "Back-End Developer"
+      - "Back End Developer"
+      - "Backend Engineer"
+      - "Server-Side Developer"
+
+  - group_id: fullstack_developer
+    canonical: "Full-Stack Developer"
+    terms:
+      - "Full-Stack Developer"
+      - "Full Stack Developer"
+      - "Fullstack Developer"
+      - "Full-Stack Engineer"
+      - "Fullstack Engineer"
+
+  - group_id: data_engineer
+    canonical: "Data Engineer"
+    terms:
+      - "Data Engineer"
+      - "Data Infrastructure Engineer"
+      - "Big Data Engineer"
+      - "ETL Developer"
+
+  - group_id: data_scientist
+    canonical: "Data Scientist"
+    terms:
+      - "Data Scientist"
+      - "ML Engineer"
+      - "Machine Learning Engineer"
+      - "AI Engineer"
+
+  - group_id: devops_engineer
+    canonical: "DevOps Engineer"
+    terms:
+      - "DevOps Engineer"
+      - "Site Reliability Engineer"
+      - "SRE"
+      - "Platform Engineer"
+      - "Infrastructure Engineer"
+      - "Cloud Engineer"
+
+  - group_id: engineering_manager
+    canonical: "Engineering Manager"
+    terms:
+      - "Engineering Manager"
+      - "EM"
+      - "Software Engineering Manager"
+      - "Development Manager"
+      - "Tech Lead Manager"
+      - "TLM"
+
+  - group_id: product_manager
+    canonical: "Product Manager"
+    terms:
+      - "Product Manager"
+      - "PM"
+      - "Product Owner"
+      - "PO"
+
+  - group_id: project_manager
+    canonical: "Project Manager"
+    terms:
+      - "Project Manager"
+      - "Program Manager"
+      - "Technical Program Manager"
+      - "TPM"
+
+  - group_id: qa_engineer
+    canonical: "QA Engineer"
+    terms:
+      - "QA Engineer"
+      - "Quality Assurance Engineer"
+      - "Test Engineer"
+      - "SDET"
+      - "Software Development Engineer in Test"
+      - "QA Analyst"
+
+certification_mappings:
+  - group_id: aws_saa
+    canonical: "AWS Solutions Architect Associate"
+    terms:
+      - "AWS SAA"
+      - "AWS Solutions Architect Associate"
+      - "AWS Certified Solutions Architect – Associate"
+      - "AWS Solutions Architect"
+
+  - group_id: aws_sap
+    canonical: "AWS Solutions Architect Professional"
+    terms:
+      - "AWS SAP"
+      - "AWS Solutions Architect Professional"
+      - "AWS Certified Solutions Architect – Professional"
+
+  - group_id: aws_developer
+    canonical: "AWS Developer Associate"
+    terms:
+      - "AWS Developer Associate"
+      - "AWS Certified Developer – Associate"
+      - "AWS DVA"
+
+  - group_id: aws_sysops
+    canonical: "AWS SysOps Administrator"
+    terms:
+      - "AWS SysOps"
+      - "AWS SysOps Administrator"
+      - "AWS Certified SysOps Administrator"
+
+  - group_id: azure_fundamentals
+    canonical: "Azure Fundamentals"
+    terms:
+      - "AZ-900"
+      - "Azure Fundamentals"
+      - "Microsoft Certified: Azure Fundamentals"
+
+  - group_id: azure_developer
+    canonical: "Azure Developer Associate"
+    terms:
+      - "AZ-204"
+      - "Azure Developer Associate"
+      - "Microsoft Certified: Azure Developer Associate"
+
+  - group_id: azure_solutions_architect
+    canonical: "Azure Solutions Architect Expert"
+    terms:
+      - "AZ-305"
+      - "Azure Solutions Architect Expert"
+      - "Microsoft Certified: Azure Solutions Architect Expert"
+
+  - group_id: pmp
+    canonical: "Project Management Professional"
+    terms:
+      - "PMP"
+      - "Project Management Professional"
+      - "PMI PMP"
+
+  - group_id: csm
+    canonical: "Certified ScrumMaster"
+    terms:
+      - "CSM"
+      - "Certified ScrumMaster"
+      - "Scrum Master Certified"
+
+  - group_id: cka
+    canonical: "Certified Kubernetes Administrator"
+    terms:
+      - "CKA"
+      - "Certified Kubernetes Administrator"
+
+  - group_id: ckad
+    canonical: "Certified Kubernetes Application Developer"
+    terms:
+      - "CKAD"
+      - "Certified Kubernetes Application Developer"
+
+  - group_id: gcp_cloud_architect
+    canonical: "Google Cloud Professional Cloud Architect"
+    terms:
+      - "GCP Cloud Architect"
+      - "Google Cloud Professional Cloud Architect"
+      - "GCP PCA"
+
+  - group_id: cissp
+    canonical: "Certified Information Systems Security Professional"
+    terms:
+      - "CISSP"
+      - "Certified Information Systems Security Professional"
+
+  - group_id: comptia_security
+    canonical: "CompTIA Security+"
+    terms:
+      - "Security+"
+      - "CompTIA Security+"
+      - "CompTIA Security Plus"
+
+  - group_id: terraform_associate
+    canonical: "HashiCorp Certified: Terraform Associate"
+    terms:
+      - "Terraform Associate"
+      - "HashiCorp Terraform Associate"
+      - "HashiCorp Certified: Terraform Associate"
