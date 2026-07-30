@@ -10,6 +10,7 @@ Provides a structured interface for making Azure OpenAI API calls with:
 
 import json
 import logging
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -19,6 +20,19 @@ from openai.types.chat import ChatCompletion
 from app.config import Settings, get_settings
 
 logger = logging.getLogger(__name__)
+
+# Reasoning models (o-series and named equivalents) don't accept temperature/seed.
+# Pattern: deployment names starting with "o" + digit, or known named reasoning models.
+_REASONING_NAME_PATTERN = re.compile(r"^o\d", re.IGNORECASE)
+_REASONING_KEYWORDS = frozenset({"gpt-5-mini", "o1", "o3", "o4"})
+
+
+def _is_reasoning_model(deployment: str) -> bool:
+    """Return True if the deployment is a reasoning model (no temperature/seed)."""
+    name = deployment.lower()
+    if _REASONING_NAME_PATTERN.match(name):
+        return True
+    return any(kw in name for kw in _REASONING_KEYWORDS)
 
 
 @dataclass(frozen=True)
@@ -94,6 +108,7 @@ class LLMService:
             json.JSONDecodeError: When response cannot be parsed as JSON.
         """
         deployment = deployment_override or self._deployment
+        reasoning = _is_reasoning_model(deployment)
 
         messages = [
             {"role": "system", "content": system_prompt},
@@ -103,22 +118,20 @@ class LLMService:
         kwargs: dict[str, Any] = {
             "model": deployment,
             "messages": messages,
+            "max_completion_tokens": max_output_tokens,
         }
 
-        # GPT-5 mini (reasoning model) does not support max_tokens,
-        # max_completion_tokens, temperature, or seed in some SDK versions.
-        # Omit all of these for compatibility.
+        # Reasoning models (o-series, gpt-5-mini) reject temperature and seed
+        if not reasoning:
+            kwargs["temperature"] = temperature
+            if seed is not None:
+                kwargs["seed"] = seed
 
-        if seed is not None:
-            pass  # Reasoning models don't support seed
+        if reasoning:
+            logger.debug("Reasoning model detected (%s): skipping temperature/seed", deployment)
 
-        if response_schema is not None:
-            # Use simple json_object mode - strict json_schema mode
-            # may not be supported by all models/API versions
-            kwargs["response_format"] = {"type": "json_object"}
-        else:
-            # Request JSON output even without a strict schema
-            kwargs["response_format"] = {"type": "json_object"}
+        # json_object mode works reliably across all modern GPT models
+        kwargs["response_format"] = {"type": "json_object"}
 
         completion: ChatCompletion = await self._client.chat.completions.create(
             **kwargs

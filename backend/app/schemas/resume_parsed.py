@@ -6,13 +6,10 @@ from pydantic import BaseModel, Field, model_validator
 
 
 class Skill(BaseModel):
-    """Extracted skill with provenance metadata."""
+    """Extracted skill."""
 
     name: str = ""
     category: str = "hard_skill"
-    confidence: float = Field(default=0.8, ge=0.0, le=1.0)
-    source_text: str = ""
-    is_contextual: bool = False
 
     @model_validator(mode="before")
     @classmethod
@@ -20,7 +17,7 @@ class Skill(BaseModel):
         if isinstance(data, str):
             return {"name": data}
         if isinstance(data, dict):
-            for f in ("name", "category", "source_text"):
+            for f in ("name", "category"):
                 if data.get(f) is None:
                     data[f] = ""
             if "type" in data and "category" not in data:
@@ -42,7 +39,6 @@ class Experience(BaseModel):
     achievements: list[str] = []
     quantifiable_metrics: list[str] = []
     experience_type: str = "full_time"
-    original_text: str = ""
 
     @model_validator(mode="before")
     @classmethod
@@ -51,7 +47,7 @@ class Experience(BaseModel):
             return {"description": data}
         if isinstance(data, dict):
             # Coerce null → "" for required str fields
-            for f in ("job_title", "employer", "description", "original_text", "experience_type"):
+            for f in ("job_title", "employer", "description", "experience_type"):
                 if data.get(f) is None:
                     data[f] = ""
             if "title" in data and "job_title" not in data:
@@ -78,7 +74,6 @@ class Education(BaseModel):
     institution: str = ""
     graduation_date: Optional[str] = None
     field_of_study: Optional[str] = None
-    original_text: str = ""
 
     @model_validator(mode="before")
     @classmethod
@@ -86,7 +81,7 @@ class Education(BaseModel):
         if isinstance(data, str):
             return {"degree": data}
         if isinstance(data, dict):
-            for f in ("degree", "institution", "original_text"):
+            for f in ("degree", "institution"):
                 if data.get(f) is None:
                     data[f] = ""
         return data
@@ -99,7 +94,6 @@ class Certification(BaseModel):
     name_normalized: Optional[str] = None
     issuing_org: Optional[str] = None
     date_obtained: Optional[str] = None
-    original_text: str = ""
 
     @model_validator(mode="before")
     @classmethod
@@ -107,9 +101,8 @@ class Certification(BaseModel):
         if isinstance(data, str):
             return {"name": data}
         if isinstance(data, dict):
-            for f in ("name", "original_text"):
-                if data.get(f) is None:
-                    data[f] = ""
+            if data.get("name") is None:
+                data["name"] = ""
         return data
 
 

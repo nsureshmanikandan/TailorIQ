@@ -145,7 +145,7 @@ class ClaimVerificationAgent(BaseAgent[ClaimVerificationInput, VerificationRepor
     """
 
     agent_name = "claim_verification"
-    max_output_tokens = 2000
+    max_output_tokens = 5000
     temperature = 0.1
 
     def __init__(

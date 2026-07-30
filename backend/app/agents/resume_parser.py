@@ -33,7 +33,7 @@ class ResumeParserAgent(BaseAgent[ResumeParserInput, ParsedResume]):
     """
 
     agent_name = "resume_parser"
-    max_output_tokens = 4000
+    max_output_tokens = 8000
     temperature = 0.1
 
     def __init__(

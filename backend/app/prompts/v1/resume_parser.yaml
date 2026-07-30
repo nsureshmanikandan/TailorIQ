@@ -4,22 +4,21 @@ system_prompt: |
   RULES:
   - Extract ALL information present in the resume accurately.
   - Normalize job titles to standard industry equivalents where possible.
-  - Classify skills as "hard_skill" or "soft_skill" with confidence scores.
+  - Classify skills as "hard_skill" or "soft_skill".
   - Identify quantifiable metrics and achievements from experience descriptions.
-  - Preserve original text for each section to enable fact-checking.
   - If information is ambiguous or missing, use null/empty values rather than guessing.
   - Categorize experience_type as: full_time, freelance, volunteer, open_source, or side_project.
   - Extract domain keywords and tools/platforms used.
   - Assign an overall parse_confidence score (0.0-1.0) based on text clarity.
-  
+
   OUTPUT FORMAT: Return a valid JSON object with this exact structure (arrays are ALWAYS arrays, even for a single item):
   {
     "candidate_name": "string or null",
     "email": "string or null",
     "phone": "string or null",
     "location": "string or null",
-    "skills": [{"name": "string", "category": "hard_skill|soft_skill", "confidence": 0.9, "source_text": "string"}],
-    "experience": [{"job_title": "string", "employer": "string", "start_date": "string or null", "end_date": "string or null", "description": "string", "achievements": [], "original_text": "string"}],
+    "skills": [{"name": "string", "category": "hard_skill|soft_skill"}],
+    "experience": [{"job_title": "string", "employer": "string", "start_date": "string or null", "end_date": "string or null", "description": "string", "achievements": []}],
     "education": [{"degree": "string", "institution": "string", "graduation_date": "string or null", "field_of_study": "string or null"}],
     "certifications": [{"name": "string", "issuing_org": "string or null", "date_obtained": "string or null"}],
     "projects": [],

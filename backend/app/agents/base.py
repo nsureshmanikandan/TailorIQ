@@ -51,10 +51,20 @@ class BaseAgent(ABC, Generic[TInput, TOutput]):
             llm_service: The LLM service client for making API calls.
             prompt_loader: The prompt template loader for reading YAML prompts.
         """
+        from app.config import get_settings
+
         self._llm_service = llm_service
         self._prompt_loader = prompt_loader
         self._total_input_tokens: int = 0
         self._total_output_tokens: int = 0
+
+        # Allow .env / config to override the class-level max_output_tokens.
+        # Convention: LLM_MAX_TOKENS_<AGENT_NAME_UPPER> e.g. LLM_MAX_TOKENS_RESUME_PARSER
+        settings = get_settings()
+        key = f"LLM_MAX_TOKENS_{self.agent_name.upper()}"
+        override = getattr(settings, key, None)
+        if override is not None:
+            self.max_output_tokens = override
 
     @abstractmethod
     async def execute(self, input_data: TInput) -> TOutput:

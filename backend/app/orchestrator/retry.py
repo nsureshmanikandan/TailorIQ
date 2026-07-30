@@ -12,7 +12,7 @@ from collections.abc import Awaitable, Callable
 from functools import wraps
 from typing import Any, TypeVar
 
-from openai import APITimeoutError, RateLimitError
+from openai import APIConnectionError, APITimeoutError, RateLimitError
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +52,7 @@ class ValidationError(Exception):
 # Exceptions that are safe to retry
 RETRYABLE_EXCEPTIONS: tuple[type[Exception], ...] = (
     RateLimitError,
+    APIConnectionError,
     ServiceUnavailableError,
     TimeoutError,
     APITimeoutError,

@@ -37,7 +37,7 @@ class InterviewPrepAgent(BaseAgent[InterviewPrepInput, InterviewGuide]):
     """
 
     agent_name = "interview_prep"
-    max_output_tokens = 4000
+    max_output_tokens = 6000
     temperature = 0.5
 
     def __init__(

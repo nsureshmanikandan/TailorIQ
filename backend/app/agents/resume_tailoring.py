@@ -39,7 +39,7 @@ class ResumeTailoringAgent(BaseAgent[ResumeTailoringInput, TailoredResume]):
     """
 
     agent_name = "resume_tailoring"
-    max_output_tokens = 6000
+    max_output_tokens = 10000
     temperature = 0.4
 
     def __init__(

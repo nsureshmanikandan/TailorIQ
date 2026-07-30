@@ -77,6 +77,19 @@ class Settings(BaseSettings):
     PROMPT_VERSION: str = "v1"
     SEMANTIC_MAPPINGS_PATH: str = "app/semantic/mappings.yaml"
 
+    # ─── Agent Token Limits ──────────────────────────────────────────────────────
+    # Defaults tuned for gpt-5.4-nano. When using a reasoning model (gpt-5-mini,
+    # o-series), reasoning tokens count against these limits — increase by ~2x.
+    LLM_MAX_TOKENS_RESUME_PARSER: int = 8000
+    LLM_MAX_TOKENS_JD_PARSER: int = 3000
+    LLM_MAX_TOKENS_MATCH_SCORING: int = 2000
+    LLM_MAX_TOKENS_GAP_ANALYSIS: int = 3000
+    LLM_MAX_TOKENS_ATS_CHECK: int = 1500
+    LLM_MAX_TOKENS_RESUME_TAILORING: int = 10000
+    LLM_MAX_TOKENS_CLAIM_VERIFICATION: int = 5000
+    LLM_MAX_TOKENS_COVER_LETTER: int = 1500
+    LLM_MAX_TOKENS_INTERVIEW_PREP: int = 6000
+
     @field_validator("LOG_LEVEL")
     @classmethod
     def validate_log_level(cls, v: str) -> str:
