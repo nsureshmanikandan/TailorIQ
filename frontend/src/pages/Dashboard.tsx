@@ -34,9 +34,10 @@ export default function Dashboard() {
             <div className="flex items-baseline gap-2 flex-wrap">
               <span className="text-sm font-bold text-white tracking-tight flex-shrink-0">TailorIQ</span>
               <span className="text-slate-600 text-sm flex-shrink-0">—</span>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight"
-                style={{ background: 'linear-gradient(90deg, #6366f1, #60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                Tailor Your Resume with AI
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight text-white">
+                Tailor Your{' '}
+                <span style={{ background: 'linear-gradient(90deg, #6366f1, #60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Resume</span>
+                {' '}with AI
               </h1>
             </div>
           </div>
