@@ -14,7 +14,7 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-from openai import AsyncAzureOpenAI
+from openai import AsyncAzureOpenAI, AsyncOpenAI
 from openai.types.chat import ChatCompletion
 
 from app.config import Settings, get_settings
@@ -68,11 +68,24 @@ class LLMService:
             settings: Application settings. If None, loads from environment.
         """
         self._settings = settings or get_settings()
-        self._client = AsyncAzureOpenAI(
-            azure_endpoint=self._settings.AZURE_OPENAI_ENDPOINT,
-            api_key=self._settings.AZURE_OPENAI_API_KEY.get_secret_value(),
-            api_version=self._settings.AZURE_OPENAI_API_VERSION,
-        )
+        _endpoint = self._settings.AZURE_OPENAI_ENDPOINT.rstrip("/")
+        if _endpoint.endswith("/openai/v1"):
+            self._client = AsyncOpenAI(
+                base_url=_endpoint,
+                api_key=self._settings.AZURE_OPENAI_API_KEY.get_secret_value(),
+            )
+            logger.info("LLMService: using OpenAI v1 client (endpoint=%s)", _endpoint)
+        else:
+            self._client = AsyncAzureOpenAI(
+                azure_endpoint=self._settings.AZURE_OPENAI_ENDPOINT,
+                api_key=self._settings.AZURE_OPENAI_API_KEY.get_secret_value(),
+                api_version=self._settings.AZURE_OPENAI_API_VERSION,
+            )
+            logger.info(
+                "LLMService: using Azure OpenAI client (endpoint=%s, api_version=%s)",
+                self._settings.AZURE_OPENAI_ENDPOINT,
+                self._settings.AZURE_OPENAI_API_VERSION,
+            )
         self._deployment = self._settings.AZURE_OPENAI_DEPLOYMENT_NAME
         self._fallback_deployment = self._settings.AZURE_OPENAI_FALLBACK_DEPLOYMENT
 
